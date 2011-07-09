@@ -60,8 +60,16 @@ PRIMARY KEY  (`eiID`)
 #CREATE TABLE `prefix_char_achievements`(
 #)TYPE=MyISAM COLLATE utf8_general_ci;
 
-#CREATE TABLE `prefix_char_appearance`(
-#)TYPE=MyISAM COLLATE utf8_general_ci;
+CREATE TABLE `prefix_char_appearance`(
+`cID`               INT NOT NULL  PRIMARY KEY,
+`faceVariation`     TINYINT UNSIGNED NOT NULL,
+`skinColor`         TINYINT UNSIGNED NOT NULL,
+`hairVariation`     TINYINT UNSIGNED NOT NULL,
+`hairColor`         TINYINT UNSIGNED NOT NULL,
+`featureVariation`  TINYINT UNSIGNED NOT NULL,
+`showHelm`          BOOL NOT NULL,
+`showCloak`         BOOL NOT NULL
+)TYPE=MyISAM COLLATE utf8_general_ci;
 
 CREATE TABLE `prefix_char_items`(
 `cID`                       INT NOT NULL,
@@ -141,13 +149,21 @@ CREATE TABLE `prefix_char_talents`(
 PRIMARY KEY  (`cID`)
 )TYPE=MyISAM COLLATE utf8_general_ci;
 
-#CREATE TABLE `prefix_char_titles`(
-#)TYPE=MyISAM COLLATE utf8_general_ci;
+CREATE TABLE `prefix_titles`(
+`tID`   SMALLINT  UNSIGNED  NOT NULL  PRIMARY KEY,
+`name`  VARCHAR(100)        NOT NULL
+)TYPE=MyISAM COLLATE utf8_general_ci;
+
+CREATE TABLE `prefix_char_titles`(
+`cID` INT                 NOT NULL,
+`tID` SMALLINT  UNSIGNED  NOT NULL,
+UNIQUE(`cID`, `tID`)
+)TYPE=MyISAM COLLATE utf8_general_ci;
 
 CREATE TABLE `prefix_char_stats`(
 `cID`               INT                             NOT NULL  PRIMARY KEY,
 `health`            INT                             NOT NULL,
-`powerType`         enum('mana','energie', 'range') NOT NULL,
+`powerType`         enum('mana','energie', 'rage') NOT NULL,
 `power`             INT                             NOT NULL,
 `str`               INT                             NOT NULL,
 `agi`               INT                             NOT NULL,
@@ -205,32 +221,40 @@ CREATE TABLE `prefix_char_guild`(
 UNIQUE(`cID`, `gID`)
 )TYPE=MyISAM COLLATE utf8_general_ci;
 
-#CREATE TABLE `prefix_char_professions`(
-#)TYPE=MyISAM COLLATE utf8_general_ci;
+CREATE TABLE `prefix_professions`(
+`pID`     INT NOT NULL PRIMARY KEY,
+`name`    VARCHAR(50) NOT NULL,
+`icon`    VARCHAR(50) NOT NULL
+)TYPE=MyISAM COLLATE utf8_general_ci;
+
+CREATE TABLE `prefix_char_professions`(
+`cID`   INT               NOT NULL,
+`pID`   INT               NOT NULL,
+`range` SmallINT UNSIGNED NOT NULL,
+`max`   SmallINT UNSIGNED NOT NULL,
+UNIQUE(`cID`, `pID`)
+)TYPE=MyISAM COLLATE utf8_general_ci;
 
 CREATE TABLE `prefix_char_companions`(
-`cID`         INT           NOT NULL,
+`cID`         INT           NOT NULL  PRIMARY KEY,
 `mounts`      VARCHAR(255)  NULL,
-`companions`  VARCHAR(255)  NULL,
-PRIMARY KEY  (`cID`)
+`companions`  VARCHAR(255)  NULL
 )TYPE=MyISAM COLLATE utf8_general_ci;
 
 #CREATE TABLE `prefix_char_pets`(
 #)TYPE=MyISAM COLLATE utf8_general_ci;
 
 CREATE TABLE `prefix_instanzen`(
-`inID`  MEDIUMINT     NOT NULL,
-`name`  varchar(30)   NOT NULL,
-PRIMARY KEY  (`inID`)
+`inID`  MEDIUMINT     NOT NULL PRIMARY KEY,
+`name`  varchar(30)   NOT NULL
 )TYPE=MyISAM COLLATE utf8_general_ci;
 
 CREATE TABLE `prefix_bosse`(
-`bID`           MEDIUMINT     NOT NULL,
+`bID`           MEDIUMINT     NOT NULL PRIMARY KEY,
 `inID`          MEDIUMINT     NOT NULL,
 `name`          varchar(30)   NOT NULL,
 `normalHealth`  INT UNSIGNED  NULL,
-`heroicHealth`  INT UNSIGNED  NULL,
-PRIMARY KEY  (`bID`)
+`heroicHealth`  INT UNSIGNED  NULL
 )TYPE=MyISAM COLLATE utf8_general_ci;
 
 CREATE TABLE `prefix_char_progression`(
