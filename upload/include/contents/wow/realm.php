@@ -21,7 +21,9 @@ foreach($slugs as $slug){
 }
 $tpl->set_out(2);
 }else{
-$slug= $menu->get(2) 
+$slug= $menu->get(2)
+$realm = new Realm($slug);
+ 
 }
 
 $design->footer();

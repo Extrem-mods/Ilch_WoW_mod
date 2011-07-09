@@ -7,7 +7,7 @@ class RealmList{
     $realms = $this->getDatasbyAPI();
     foreach($realms as $realm){
       if(!isset($this->_list[$realm['slug']])){
-        $this->_list[$realm['slug']] = new Realm($realm['slug']);
+        $this->_list[$realm['slug']] = new Realm($realm['slug'], false);
       }
       $this->_list[$realm['slug']]->setAll($realm);
       $this->_list[$realm['slug']]->saveDatas();
