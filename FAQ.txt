@@ -1,0 +1,6 @@
+1. Warum wird über all UTF-8 Verwednet/muss überall verwendet werden?
+---------------------------------------------------------------------
+Dieser mod soll so allgemein wie möglich gehalten werden. Und schon beim
+laden der europäischen Serverliste fallen einem die kyrillischen Realms ins Auge,
+welche ohne UTF-8 nicht vernünftig dargestellt werden könnten.
+ 
