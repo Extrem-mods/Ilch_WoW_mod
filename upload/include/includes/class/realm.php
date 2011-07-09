@@ -12,7 +12,7 @@ class Realm{
     if($loadData) $this->getDatas(); 
   }
 
-  private function getDatasByDB(){
+  private function getDatasByDb(){
     $result =  db_query("SELECT `name` , `type` , `queue` , `status` , `population` , UNIX_TIMESTAMP(`refresh`) as `time` FROM prefix_realms WHERE `slug` = '{$this->_slug}'");
     if($result = mysql_fetch_array($result)){
       if($result['time'] < time()-60*60*24) return false;
@@ -28,7 +28,7 @@ class Realm{
     }
   }
   
-  private function getDatasbyAPI(){
+  private function getDatasbyApi(){
     $url = 'http://eu.battle.net/api/wow/realm/status';
     $curl = new Curl();
 	  $curl->setURL($url. '?realms=' . $this->_slug);
@@ -58,7 +58,7 @@ class Realm{
   }
   
   public function getDatas(){
-    if(!getDatasByDB()) return getDatasbyAPI();
+    if(!getDatasByDb()) return getDatasbyApi();
     return true; 
   }
   
