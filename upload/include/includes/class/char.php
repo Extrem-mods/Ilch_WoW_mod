@@ -5,9 +5,9 @@
 defined ('main') or die ( 'no direct access' );
 
 class Char{
-private $name; //string
-private $server; //string
-private $values = array(); //array
+private $_name;
+private $_realm;
+private $_values = array();
  
  // laed einen Char aus der DB 
 public function loadFromDB(){
