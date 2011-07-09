@@ -68,4 +68,8 @@ class Realm{
   public getPopulation(){ return $this->_population;}
   public getName(){ return $this->_name;}
   public getSlug(){ return $this->_slug;}
+  public function getAsArray(){
+  return array('type' => $this->_type, 'queue' => $this->_queue, 'status' => $this->_status, 'population' => $this->_population, 'name' => $this->_name, 'slug' $this->_slug);
+  
+  }
 }

@@ -2,16 +2,16 @@
 
 class RealmList{
   private $_list = array();
-  
+ 
   public function getDatas(){
     $realms = $this->getDatasbyAPI();
     foreach($realms as $realm){
       if(!isset($this->_list[$realm['slug']])){
         $this->_list[$realm['slug']] = new Realm($realm['slug']);
       }
-      $this->_list[$realm['slug']]->setAll($realm);      
+      $this->_list[$realm['slug']]->setAll($realm);
+      $this->_list[$realm['slug']]->saveDatas();
     }
-     
   }
   
   private function getDatasbyAPI(){
@@ -25,7 +25,8 @@ class RealmList{
     return $this->_list[$slug];
   }
   
-  public function getrealmList($asList=false){
+  public function getSlugs($asList=false){
+    if()
     $tmp= '';
     foreach($this->_list as $k => $v){
       $tmp .= $k. ':';
