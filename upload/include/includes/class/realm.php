@@ -52,9 +52,9 @@ class Realm{
       $this->_status = $data['status'];
       $this->_population = $data['population']; 
       $this->_name = $data['name'];
-    }else{
-    //! TODO
+      return true;
     }
+    return false;
   }
   
   public function getDatas(){

@@ -13,6 +13,7 @@ class RealmList{
     }
      
   }
+  
   private function getDatasbyAPI(){
     $url = 'http://eu.battle.net/api/wow/realm/status';
     $curl = new Curl();
@@ -23,6 +24,7 @@ class RealmList{
   public function getRealm($slug){
     return $this->_list[$slug];
   }
+  
   public function getrealmList($asList=false){
     $tmp= '';
     foreach($this->_list as $k => $v){
