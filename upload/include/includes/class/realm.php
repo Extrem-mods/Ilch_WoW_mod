@@ -1,5 +1,4 @@
-<?php
-
+<?php 
 class Realm{
   private $_type; //typ (pve,pvp, rp)
   private $_queue;  //Warteschlange (bool)
@@ -14,9 +13,9 @@ class Realm{
   }
 
   private function getDatasByDB(){
-    $result =  db_query("SELECT * FROM prefix_realms WHERE `slug` = '{$this->_slug}'");
+    $result =  db_query("SELECT `name` , `type` , `queue` , `status` , `population` , UNIX_TIMESTAMP(`refresh`) as `time` FROM prefix_realms WHERE `slug` = '{$this->_slug}'");
     if($result = mysql_fetch_array($result)){
-      if($result['refresh'] < time()-60*60*24) return false;
+      if($result['time'] < time()-60*60*24) return false;
       
       $this->_type = $result['type'];
       $this->_queue  = $result['queue'];
@@ -30,13 +29,32 @@ class Realm{
   }
   
   private function getDatasbyAPI(){
-  
-    $erfolg = false;
-    if($erfolg) saveDatas();
-    return $erfolg; 
+    $url = 'http://eu.battle.net/api/wow/realm/status';
+    $curl = new Curl();
+	  $curl->setURL($url. '?realms=' . $this->_slug);
+	  $tmp = json_decode($curl->getResult(), true);
+    var_dump($tmp); 
   }
   
-  private function saveDatas(){
+  public function saveDatas(){
+    return(db_query("INSERT INTO `prefix_realms` 
+                    (`slug`, `name`, `type`, `queue`, `status`, `population`)
+                    VALUES 
+                    ('{$this->_slug}', '{$this->_name}', '{$this->_type}', '{$this->_queue}', '{$this->_status}', '{$this->_population}')
+                    ON DUPLICATE KEY UPDATE
+                    `slug` = VALUES(`slug`), `name` = VALUES(`name`), `type` = VALUES(`type`), `queue` = VALUES(`queue`), `status` = VALUES(`status`), `population` = VALUES(`population`)
+                    WHERE `slug` = VALUES(`slug`);")
+  }
+  public function setAll($data){
+    if(is_array($data){
+      $this->_type = $data['type'];
+      $this->_queue  = $data['queue'];
+      $this->_status = $data['status'];
+      $this->_population = $data['population']; 
+      $this->_name = $data['name'];
+    }else{
+    //! TODO
+    }
   }
   
   public function getDatas(){
