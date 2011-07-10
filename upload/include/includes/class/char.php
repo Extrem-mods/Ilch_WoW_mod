@@ -35,7 +35,7 @@ class Char{
     WHERE `cID` ={$this->_cID} OR (`name` LIKE '{$this->_name}' AND `realm` LIKE '{$this->_realm}')";
     $result =  db_query($sql);
     if($result = mysql_fetch_array($result)){
-      if($result['time'] < time()-60*60*24) return false;
+      if($result['updated'] < time()-60*60*24) return false;
       $this->_cID = $result['cID'];             
       $this->_name = $result['name'];           
       $this->_level = $result['level'];           
@@ -53,7 +53,18 @@ class Char{
   }
 // laed einen Char aus dem WOW Arsenal
 private function getDatasByapi(){
+  if($this->_name == NULL || $this->_realm== NULL)  return false;
+    $url = 'http://eu.battle.net/api/wow/character/'.$this->_realm.'/'. $this->_name;
+    $curl = new Curl();
+	  $curl->setURL($url);
+	  $tmp = json_decode($curl->getResult(), true);
+    var_dump($tmp);
+    unset($curl); 
 }
-public function getDatas(){
-
+  public function getDatas(){
+    if(!getDatasByDb()) return getDatasbyApi();
+    return true; 
+  }
+  public function saveDatas(){
+  }
 }
