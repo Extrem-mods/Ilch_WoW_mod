@@ -59,6 +59,7 @@ private function getDatasByapi(){
 	  $curl->setURL($url);
 	  $tmp = json_decode($curl->getResult(), true);
     var_dump($tmp);
+    $this->saveDatas();
     unset($curl); 
 }
   public function getDatas(){

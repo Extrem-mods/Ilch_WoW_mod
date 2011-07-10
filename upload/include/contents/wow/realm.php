@@ -33,8 +33,16 @@ $tpl = new tpl ('wow/realm_details');
   $out = $realm->getAsArray()
   $out['status'] = (($out['status'])?'<span class="true">Online</span>':'<span class="false">Offline</span>')
   $out['queue'] = (($out['queue'])?'<span class="true">Online</span>':'<span class="false">Offline</span>')
-    
   $tpl->set_ar_out($out,0);
+  $tpl->set_out(1);
+  //
+  $chars = db_query("SELECT `cID` FROM `prefix_chars` WHERE `realm` LIKE '{$slug}')"));
+  for($char = mysql_fetch_assoc($chars)){
+  $char = new Char($char);
+  $out = $char->getAsArray();
+  $tpl->set_ar_out($out,2);
+  }
+  $tpl->set_out(3);
  
 }
 
