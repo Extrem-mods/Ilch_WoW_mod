@@ -34,7 +34,8 @@ class Curl{
       $this->setOpt(CURLOPT_RETURNTRANSFER, false);   
       return curl_exec($this->curl);
   }
-  public function setURL($url){
+  public function setURL($url, $port = 80){
     $this->setOpt(CURLOPT_URL,$url);
+    $this->setOpt(CURLOPT_PORT, $port);
   }
 }

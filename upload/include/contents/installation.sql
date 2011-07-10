@@ -19,7 +19,8 @@ CREATE TABLE `prefix_chars`(
   `achievementPoints` INT               NOT NULL,
   `thumbnail`         varchar(255)      NOT NULL,
   `lastModified`      TIMESTAMP         NOT NULL,
-  `updated`           TIMESTAMP         NOT NULL
+  `updated`           TIMESTAMP         NOT NULL,
+  UNIQUE(`name`, `realm`)
 )TYPE=MyISAM COLLATE utf8_general_ci;
 
 CREATE TABLE `prefix_guild`(
@@ -163,7 +164,7 @@ UNIQUE(`cID`, `tID`)
 CREATE TABLE `prefix_char_stats`(
 `cID`               INT                             NOT NULL  PRIMARY KEY,
 `health`            INT                             NOT NULL,
-`powerType`         enum('mana','energie', 'rage') NOT NULL,
+`powerType`         enum('mana','energie', 'rage')  NOT NULL,
 `power`             INT                             NOT NULL,
 `str`               INT                             NOT NULL,
 `agi`               INT                             NOT NULL,
