@@ -19,6 +19,7 @@ class RealmList{
     $curl = new Curl();
 	  $curl->setURL($url);
 	  $tmp = json_decode($curl->getResult(), true);
+	  unset($curl);
     return $tmp['realms'] 
   }
   public function getRealm($slug){

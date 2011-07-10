@@ -33,7 +33,8 @@ class Realm{
     $curl = new Curl();
 	  $curl->setURL($url. '?realms=' . $this->_slug);
 	  $tmp = json_decode($curl->getResult(), true);
-    var_dump($tmp); 
+    var_dump($tmp);
+    unset($curl); 
   }
   
   public function saveDatas(){
