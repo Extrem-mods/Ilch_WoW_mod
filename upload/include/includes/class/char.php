@@ -74,13 +74,25 @@ private function getDatasByapi(){
   public function saveDatas(){
     if($this->_name == NULL || $this->_realm== NULL || $this->_lastModified == NULL)  return false;
     sql="INSERT INTO `prefix_chars` 
-                    (`name` , `level` , `realm` , `class`, `race`, `gender` , `achievementPoints` , `thumbnail` , `lastModified`)
-                    VALUES 
-                    ('{$this->_name}', '{$this->_level}', '{$this->_realm}', '{$this->_class}', '{$this->_race}', '{$this->_gender}', '{$this->_achievementPoints}', '{$this->_thumbnail}', '{$this->_lastModified}')
-                    ON DUPLICATE KEY UPDATE
-                    `name` =  VALUES(`name`), `level` = VALUES(`level`), `realm` = VALUES(`realm`), `class` = VALUES(`class`), `race` = VALUES(`race`), `gender` = VALUES(`gender`), `achievementPoints` = VALUES(`achievementPoints`), `thumbnail` = VALUES(`thumbnail`), `lastModified`= VALUES(`lastModified`)
-                    WHERE `cID` = {$this->cID};";
-    
-        
+        (`name` , `level` , `realm` , `class`, `race`, `gender` , `achievementPoints` , `thumbnail` , `lastModified`)
+        VALUES 
+        ('{$this->_name}', '{$this->_level}', '{$this->_realm}', '{$this->_class}', '{$this->_race}', '{$this->_gender}', '{$this->_achievementPoints}', '{$this->_thumbnail}', '{$this->_lastModified}')
+        ON DUPLICATE KEY UPDATE
+        `name` =  VALUES(`name`), `level` = VALUES(`level`), `realm` = VALUES(`realm`), `class` = VALUES(`class`), `race` = VALUES(`race`), `gender` = VALUES(`gender`), `achievementPoints` = VALUES(`achievementPoints`), `thumbnail` = VALUES(`thumbnail`), `lastModified`= VALUES(`lastModified`)
+        WHERE `cID` = {$this->cID};";
+  }
+  public function getAsArray(){
+  return array(
+  'cID' =>$this->_cID,             
+  'name' => $this->_name,           
+  'level' => $this->_level,           
+  'realm' => $this->_realm,
+  'class' => $this->_class,         
+  'race' => $this->_race,          
+  'gender' => $this->_gender,           
+  'achievementPoints' => $this->_achievementPoints,
+  'thumbnail' => $this->_thumbnail,        
+  'lastModified' => $this->_lastModified,     
+  'update' => $this->_updated);
   }
 }
