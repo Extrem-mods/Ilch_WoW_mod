@@ -44,7 +44,7 @@ class Realm{
                     ('{$this->_slug}', '{$this->_name}', '{$this->_type}', '{$this->_queue}', '{$this->_status}', '{$this->_population}')
                     ON DUPLICATE KEY UPDATE
                     `slug` = VALUES(`slug`), `name` = VALUES(`name`), `type` = VALUES(`type`), `queue` = VALUES(`queue`), `status` = VALUES(`status`), `population` = VALUES(`population`)
-                    WHERE `slug` = VALUES(`slug`);")
+                    WHERE `slug` = VALUES(`slug`);");
   }
   public function setAll($data){
     if(is_array($data){

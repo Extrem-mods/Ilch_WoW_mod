@@ -28,14 +28,14 @@ class Char{
   }          
   
  // laed einen Char aus der DB 
-  private function getDatasByDb(){
+  private function getDatasByDb($ignorTime = false){
     $sql ="SELECT
     `cID` , `name` , `level` , `realm` , `class`, `race`, `gender` , `achievementPoints` , `thumbnail` , UNIX_TIMESTAMP(`lastModified`) as  `lastModified`, UNIX_TIMESTAMP(`updated`) as `updated` 
     FROM `prefix_chars`
     WHERE `cID` ={$this->_cID} OR (`name` LIKE '{$this->_name}' AND `realm` LIKE '{$this->_realm}')";
     $result =  db_query($sql);
     if($result = mysql_fetch_array($result)){
-      if($result['updated'] < time()-60*60*24) return false;
+      if($result['updated'] < time()-60*60*24 && !$ignorTime) return false;
       $this->_cID = $result['cID'];             
       $this->_name = $result['name'];           
       $this->_level = $result['level'];           
@@ -47,9 +47,9 @@ class Char{
       $this->_thumbnail = $result['thumbnail'];        
       $this->_lastModified = $result['lastModified'];     
       $this->_updated = $result['updated'];
-    }else{
-      return false;
+      return true;
     }
+      return false;
   }
 // laed einen Char aus dem WOW Arsenal
 private function getDatasByapi(){
@@ -62,9 +62,25 @@ private function getDatasByapi(){
     unset($curl); 
 }
   public function getDatas(){
-    if(!getDatasByDb()) return getDatasbyApi();
+    if(!getDatasByDb()){
+      if(!getDatasbyApi()){
+        getDatasByDb();
+        return getDatasbyApi();  
+      }
+    } 
     return true; 
   }
+  
   public function saveDatas(){
+    if($this->_name == NULL || $this->_realm== NULL || $this->_lastModified == NULL)  return false;
+    sql="INSERT INTO `prefix_chars` 
+                    (`name` , `level` , `realm` , `class`, `race`, `gender` , `achievementPoints` , `thumbnail` , `lastModified`)
+                    VALUES 
+                    ('{$this->_name}', '{$this->_level}', '{$this->_realm}', '{$this->_class}', '{$this->_race}', '{$this->_gender}', '{$this->_achievementPoints}', '{$this->_thumbnail}', '{$this->_lastModified}')
+                    ON DUPLICATE KEY UPDATE
+                    `name` =  VALUES(`name`), `level` = VALUES(`level`), `realm` = VALUES(`realm`), `class` = VALUES(`class`), `race` = VALUES(`race`), `gender` = VALUES(`gender`), `achievementPoints` = VALUES(`achievementPoints`), `thumbnail` = VALUES(`thumbnail`), `lastModified`= VALUES(`lastModified`)
+                    WHERE `cID` = {$this->cID};";
+    
+        
   }
 }
