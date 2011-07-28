@@ -1,6 +1,6 @@
 <?php
 
-class Item extends Api{
+class Item implements Api{
   private $_id;
   private $_name;
   private $_icon;

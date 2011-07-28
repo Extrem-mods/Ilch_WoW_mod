@@ -4,7 +4,7 @@
 
 defined ('main') or die ( 'no direct access' );
 
-class Char extends Api{
+class Char implements Api{
   private $_cID;             
   private $_name;           
   private $_level;           
