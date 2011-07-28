@@ -23,6 +23,7 @@ class Item implements Api{
     }
     return false;    
   }
+  
   public function getDatas(){
     if(!getDatasByDb()){
         return getDatasbyApi();  
@@ -40,9 +41,19 @@ class Item implements Api{
     
     saveDatas(); 
   }
-  private function saveDatas(){
+  
+  public function saveDatas(){
   }
+  
   public function getAsArray(){
+    $url = getIconUrl();
+    return array(
+      'id' =>$this->_id,
+      'name' =>$this->_name,
+      'icon' =>$this->_icon,
+      'quality' =>$this->_quality,
+      'URL' => $url  
+    );
   }
   
   /**
