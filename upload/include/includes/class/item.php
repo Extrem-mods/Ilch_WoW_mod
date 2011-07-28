@@ -10,6 +10,7 @@ class Item{
   
   }
   private function getDatasbyDb(){
+  $query = "SELECT `name`, `icon`, `quality FROM `prefix_items` WHERE `iID` = $_id";
     
   }
   private function getDatasbyApi(){
@@ -19,5 +20,15 @@ class Item{
 	  $tmp = json_decode($curl->getResult(), true);
     var_dump($tmp);
     unset($curl); 
+  }
+  /**
+   *Gibt einen Link auf das Itemicon. Wenn das Icon auf dem Server ist verwiest es dahin,
+   *Ansonsten wird es versucht Blizzard zu laden, und lokal zu speichern.
+   *Geht das scvhief, verweist es direkt auf den Bestand von Blizzard       
+   */      
+  public getIconUrl(){
+  
+  }
+  private loadIconFromServer(){
   }  
 }
