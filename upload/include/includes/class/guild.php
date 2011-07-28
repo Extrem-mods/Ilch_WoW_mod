@@ -1,4 +1,4 @@
 <?php
 
-class Guild{
+class Guild extends Api{
 }
