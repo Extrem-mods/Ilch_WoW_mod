@@ -1,15 +1,17 @@
 <?php
 
 class item_tool extends item{
-private $eiID;
-private $gem0;
-private $gem1;
-private $gem2;
-private $enchant;
-private $set;
-private $reforge;
+private $_eiID;
+private $_gem0;
+private $_gem1;
+private $_gem2;
+private $_enchant;
+private $_set;
+private $_reforge;
 
   public function __construct($id){
+    $this->_eiID= $id;
+    getDatas();
   }
   private function getDatasbyDb(){
   }
@@ -23,6 +25,6 @@ private $reforge;
   
   }
   public function saveDatas(){
-    
+    return;
   }  
 } 

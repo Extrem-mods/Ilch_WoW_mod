@@ -75,6 +75,9 @@ class Item implements Api{
    *
    */     
   private loadIconFromServer(){
-    return (bool) file_put_contents(self::LOCAL_ICON_PATH.$_icon.'.jpg',file_get_contents(self::REMOTE_ICON_PATH.$_icon.'.jpg'));
+    return (bool) file_put_contents(
+      self::LOCAL_ICON_PATH.$_icon.'.jpg',
+      file_get_contents(self::REMOTE_ICON_PATH.$_icon.'.jpg')
+    );
   }  
 }

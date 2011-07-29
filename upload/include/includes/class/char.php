@@ -10,7 +10,8 @@ define('WITH_items', 2);
 define('WITH_APPEARANCE', 4);
 define('WITH_TALENTS', 8);
 define('WITH_TITLES', 16);
-
+define('WITH_PROFESSIONS', 32);
+define('WITH_COMPANIONS', 64);
 
 
 class Char implements Api{
@@ -29,16 +30,17 @@ class Char implements Api{
   private $_mods = array();
   
   public function __construct($name, $realm, $loadData=true, $mods = NONE){
-  $this->_name = $name;
-  $this->_realm = $realm;
-  if($loadData) $this->getDatas();   
+    $this->_name = $name;
+    $this->_realm = $realm;
+    if($loadData) $this->getDatas($mods);   
   }
-  public function __construct($cid, $loadData=true){
-  $this->_cID = $cid;
-  if($loadData) $this->getDatas();   
-  }          
+  public function __construct($cid, $loadData=true, $mods = NONE){
+    $this->_cID = $cid;
+    if($loadData) $this->getDatas($mods);  
+  }
+            
   
- // laed einen Char aus der DB 
+  // laed einen Char aus der DB 
   private function getDatasByDb($ignorTime = false){
     $sql ="SELECT
     `cID` , `name` , `level` , `realm` , `class`, `race`, `gender` , `achievementPoints` , `thumbnail` , UNIX_TIMESTAMP(`lastModified`) as  `lastModified`, UNIX_TIMESTAMP(`updated`) as `updated` 
@@ -62,9 +64,9 @@ class Char implements Api{
     }
       return false;
   }
-// laed einen Char aus dem WOW Arsenal
-private function getDatasByapi(){
-  if($this->_name == NULL || $this->_realm== NULL)  return false;
+  // laed einen Char aus dem WOW Arsenal
+  private function getDatasByapi(){
+    if($this->_name == NULL || $this->_realm== NULL)  return false;
     $url = 'http://eu.battle.net/api/wow/character/'.$this->_realm.'/'. $this->_name;
     $curl = new Curl();
 	  $curl->setURL($url);
@@ -73,7 +75,9 @@ private function getDatasByapi(){
     $this->saveDatas();
     unset($curl); 
 }
-  public function getDatas(){
+
+  public function getDatas($mods = NONE){
+    //! TODO 
     if(!getDatasByDb()){
       if(!getDatasbyApi()){
         getDatasByDb();
@@ -93,6 +97,7 @@ private function getDatasByapi(){
         `name` =  VALUES(`name`), `level` = VALUES(`level`), `realm` = VALUES(`realm`), `class` = VALUES(`class`), `race` = VALUES(`race`), `gender` = VALUES(`gender`), `achievementPoints` = VALUES(`achievementPoints`), `thumbnail` = VALUES(`thumbnail`), `lastModified`= VALUES(`lastModified`)
         WHERE `cID` = {$this->cID};";
   }
+  
   public function getAsArray(){
   return array(
   'cID' =>$this->_cID,             
@@ -106,5 +111,19 @@ private function getDatasByapi(){
   'thumbnail' => $this->_thumbnail,        
   'lastModified' => $this->_lastModified,     
   'update' => $this->_updated);
+  }
+  
+  public function getMods($mod= ''){
+    if(!empty($mod)){
+      if(!is_array($mod)) $mod = array('mod');
+      $tmp = array();
+      foreach ($mod as $name){
+        if(in_array($name, $this->_mods){
+        $tmp[$name] = $this->_mods[$name];
+        }        
+      }
+      return $tmp;
+    }
+    return $_mods; 
   }
 }
