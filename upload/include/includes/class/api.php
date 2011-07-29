@@ -1,8 +1,8 @@
 <?php
 
-interface Api{
-private abstract function  getDatasByDb();
-private abstract function  getDatasByapi();
+abstract class Api{
+protected abstract function  getDatasByDb();
+protected abstract function  getDatasByApi();
 public abstract function getDatas();
 public abstract function  saveDatas();
 }

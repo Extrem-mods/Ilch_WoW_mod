@@ -14,7 +14,7 @@ define('WITH_PROFESSIONS', 32);
 define('WITH_COMPANIONS', 64);
 
 
-class Char implements Api{
+class Char extends Api{
   private $_cID;             
   private $_name;           
   private $_level;           
@@ -34,14 +34,16 @@ class Char implements Api{
     $this->_realm = $realm;
     if($loadData) $this->getDatas($mods);   
   }
+  /*
   public function __construct($cid, $loadData=true, $mods = NONE){
     $this->_cID = $cid;
     if($loadData) $this->getDatas($mods);  
   }
+  /**/
             
   
   // laed einen Char aus der DB 
-  private function getDatasByDb($ignorTime = false){
+  protected function getDatasByDb($ignorTime = false){
     $sql ="SELECT
     `cID` , `name` , `level` , `realm` , `class`, `race`, `gender` , `achievementPoints` , `thumbnail` , UNIX_TIMESTAMP(`lastModified`) as  `lastModified`, UNIX_TIMESTAMP(`updated`) as `updated` 
     FROM `prefix_chars`
@@ -70,7 +72,7 @@ class Char implements Api{
     }
   }
   // laed einen Char aus dem WOW Arsenal
-  private function getDatasByapi($mods = NONE){
+  protected function getDatasByapi($mods = NONE){
     if($this->_name == NULL || $this->_realm== NULL)  return false;
     //! TODO Laden der gewuenschten Mods
     $url = 'http://eu.battle.net/api/wow/character/'.$this->_realm.'/'. $this->_name;
@@ -93,7 +95,7 @@ class Char implements Api{
   
   public function saveDatas(){
     if($this->_name == NULL || $this->_realm== NULL || $this->_lastModified == NULL)  return false;
-    sql="INSERT INTO `prefix_chars` 
+    $sql="INSERT INTO `prefix_chars` 
         (`name` , `level` , `realm` , `class`, `race`, `gender` , `achievementPoints` , `thumbnail` , `lastModified`)
         VALUES 
         ('{$this->_name}', '{$this->_level}', '{$this->_realm}', '{$this->_class}', '{$this->_race}', '{$this->_gender}', '{$this->_achievementPoints}', '{$this->_thumbnail}', '{$this->_lastModified}')
@@ -122,7 +124,7 @@ class Char implements Api{
       if(!is_array($mod)) $mod = array('mod');
       $tmp = array();
       foreach ($mod as $name){
-        if(in_array($name, $this->_mods){
+        if(in_array($name, $this->_mods)){
         $tmp[$name] = $this->_mods[$name];
         }        
       }

@@ -1,6 +1,6 @@
 <?php
 
-class RealmList{
+class RealmList extends Api{
   private $_list = array();
  
   public function getDatas(){
@@ -14,20 +14,25 @@ class RealmList{
     }
   }
   
-  private function getDatasbyAPI(){
+  protected function getDatasByApi(){
     $url = 'http://eu.battle.net/api/wow/realm/status';
     $curl = new Curl();
 	  $curl->setURL($url);
 	  $tmp = json_decode($curl->getResult(), true);
 	  unset($curl);
-    return $tmp['realms'] 
+    return $tmp['realms'];
   }
+protected function getDatasByDb(){
+  return getDatasByApi();
+}
+
   public function getRealm($slug){
     return $this->_list[$slug];
   }
+  public function saveDatas(){
+  }
   
   public function getSlugs($asList=false){
-    if()
     $tmp= '';
     foreach($this->_list as $k => $v){
       $tmp .= $k. ':';

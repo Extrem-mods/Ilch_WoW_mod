@@ -1,6 +1,19 @@
-1. Warum wird über all UTF-8 Verwednet/muss überall verwendet werden?
----------------------------------------------------------------------
+I Für Entwikler
+===============
+I.1. Warum wird über all UTF-8 Verwednet/muss überall verwendet werden?
+-----------------------------------------------------------------------
 Dieser mod soll so allgemein wie möglich gehalten werden. Und schon beim
 laden der europäischen Serverliste fallen einem die kyrillischen Realms ins Auge,
 welche ohne UTF-8 nicht vernünftig dargestellt werden könnten.
+
+I.2 Was ist die Datei db.mwb im extras Ordner?
+----------------------------------------------
+Bei der db.bak handelt es sich um ein EER-Modell der Datenbank.
+Diese Dtaei kann mithile des Kostenlosen MxSQL Workbench (http://www.mysql.de/products/workbench/)
+Betrachtet und editiert werden. Beachtet bitte, das diese Datei unter Umständen neuer ist, als die install.sql,
+Da ich letztere aus dem Modell erstelle. Daher kann es auch sein, das das Modell featchers enthält, die
+in der install.sql (noch) nicht vorkommen (zB:Fremdschlüssel).
+
+II Für Benutzer
+===============
  

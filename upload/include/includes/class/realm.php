@@ -1,5 +1,5 @@
 <?php 
-class Realm{
+class Realm extends Api{
   private $_type; //typ (pve,pvp, rp)
   private $_queue;  //Warteschlange (bool)
   private $_status; //status (bool)
@@ -12,7 +12,7 @@ class Realm{
     if($loadData) $this->getDatas(); 
   }
 
-  private function getDatasByDb(){
+  protected function getDatasByDb(){
     $result =  db_query("SELECT `name` , `type` , `queue` , `status` , `population` , UNIX_TIMESTAMP(`refresh`) as `time` FROM prefix_realms WHERE `slug` = '{$this->_slug}'");
     if($result = mysql_fetch_array($result)){
       if($result['time'] < time()-60*60*24) return false;
@@ -28,7 +28,7 @@ class Realm{
     }
   }
   
-  private function getDatasbyApi(){
+  protected function getDatasbyApi(){
     $url = 'http://eu.battle.net/api/wow/realm/status';
     $curl = new Curl();
 	  $curl->setURL($url. '?realms=' . $this->_slug);
@@ -44,10 +44,10 @@ class Realm{
                     ('{$this->_slug}', '{$this->_name}', '{$this->_type}', '{$this->_queue}', '{$this->_status}', '{$this->_population}')
                     ON DUPLICATE KEY UPDATE
                     `slug` = VALUES(`slug`), `name` = VALUES(`name`), `type` = VALUES(`type`), `queue` = VALUES(`queue`), `status` = VALUES(`status`), `population` = VALUES(`population`)
-                    WHERE `slug` = VALUES(`slug`);");
+                    WHERE `slug` = VALUES(`slug`);"));
   }
   public function setAll($data){
-    if(is_array($data){
+    if(is_array($data)){
       $this->_type = $data['type'];
       $this->_queue  = $data['queue'];
       $this->_status = $data['status'];
@@ -63,14 +63,14 @@ class Realm{
     return true; 
   }
   
-  public getType(){ return $this->_type;}
-  public getQueue(){ return $this->_queue;}
-  public getStatus(){ return $this->_status;}
-  public getPopulation(){ return $this->_population;}
-  public getName(){ return $this->_name;}
-  public getSlug(){ return $this->_slug;}
+  public function getType(){ return $this->_type;}
+  public function getQueue(){ return $this->_queue;}
+  public function getStatus(){ return $this->_status;}
+  public function getPopulation(){ return $this->_population;}
+  public function getName(){ return $this->_name;}
+  public function getSlug(){ return $this->_slug;}
   public function getAsArray(){
-  return array('type' => $this->_type, 'queue' => $this->_queue, 'status' => $this->_status, 'population' => $this->_population, 'name' => $this->_name, 'slug' $this->_slug);
+  return array('type' => $this->_type, 'queue' => $this->_queue, 'status' => $this->_status, 'population' => $this->_population, 'name' => $this->_name, 'slug' => $this->_slug);
   
   }
 }

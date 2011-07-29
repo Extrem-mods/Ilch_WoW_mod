@@ -12,7 +12,7 @@ class CharStats implements Api{
   private function  getDatasByDb(){
     $sql =  "SELECT * FROM `prefix_char_stats` WHERE `cID` = {$this->_stats['cID']}";
     $result = db_query($sql);
-    if($result = mysql_fetch_array($result)){
+    if($result = mysql_fetch_assoc($result)){
     $this->_stats = $result;   
     }
   }
