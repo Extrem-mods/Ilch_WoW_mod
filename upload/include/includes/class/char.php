@@ -45,10 +45,9 @@ class Char implements Api{
     $sql ="SELECT
     `cID` , `name` , `level` , `realm` , `class`, `race`, `gender` , `achievementPoints` , `thumbnail` , UNIX_TIMESTAMP(`lastModified`) as  `lastModified`, UNIX_TIMESTAMP(`updated`) as `updated` 
     FROM `prefix_chars`
-    WHERE `cID` ={$this->_cID} OR (`name` LIKE '{$this->_name}' AND `realm` LIKE '{$this->_realm}')";
+    WHERE (`cID` ={$this->_cID} OR (`name` LIKE '{$this->_name}' AND `realm` LIKE '{$this->_realm}')) ". ($ignorTime?"":"AND `updated` > (UNIX_TIMESTAMP() - 60*60*24)");
     $result =  db_query($sql);
     if($result = mysql_fetch_array($result)){
-      if($result['updated'] < time()-60*60*24 && !$ignorTime) return false;
       $this->_cID = $result['cID'];             
       $this->_name = $result['name'];           
       $this->_level = $result['level'];           
@@ -61,12 +60,19 @@ class Char implements Api{
       $this->_lastModified = $result['lastModified'];     
       $this->_updated = $result['updated'];
       return true;
-    }
+    }else{
+      $result = db_query("SELECT `name` , `realm` FROM `prefix_chars` WHERE (`cID` ={$this->_cID}");
+      if($result = mysql_fetch_array($result)){
+        $this->_name = $result['name'];                      
+        $this->_realm = $result['realm'];
+      }
       return false;
+    }
   }
   // laed einen Char aus dem WOW Arsenal
-  private function getDatasByapi(){
+  private function getDatasByapi($mods = NONE){
     if($this->_name == NULL || $this->_realm== NULL)  return false;
+    //! TODO Laden der gewuenschten Mods
     $url = 'http://eu.battle.net/api/wow/character/'.$this->_realm.'/'. $this->_name;
     $curl = new Curl();
 	  $curl->setURL($url);
@@ -77,14 +83,12 @@ class Char implements Api{
 }
 
   public function getDatas($mods = NONE){
-    //! TODO 
     if(!getDatasByDb()){
-      if(!getDatasbyApi()){
-        getDatasByDb();
         return getDatasbyApi();  
-      }
     } 
-    return true; 
+    return true;
+    //! TODO Fur jeden angegebenen Mod muss eine Intsanz der entsprecvhenden Klasse angelegt werden,
+    // und die Dtaen die vorher in die DB zu laden sind aus der DB ion die KLassne geladen werden.
   }
   
   public function saveDatas(){
