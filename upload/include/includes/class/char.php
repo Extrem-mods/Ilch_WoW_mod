@@ -4,6 +4,15 @@
 
 defined ('main') or die ( 'no direct access' );
 
+define('NONE', 0);
+define('WITH_STATS', 1);
+define('WITH_items', 2);
+define('WITH_APPEARANCE', 4);
+define('WITH_TALENTS', 8);
+define('WITH_TITLES', 16);
+
+
+
 class Char implements Api{
   private $_cID;             
   private $_name;           
@@ -17,7 +26,9 @@ class Char implements Api{
   private $_lastModified;     
   private $_updated;
   
-  public function __construct($name, $realm, $loadData=true){
+  private $_mods = array();
+  
+  public function __construct($name, $realm, $loadData=true, $mods = NONE){
   $this->_name = $name;
   $this->_realm = $realm;
   if($loadData) $this->getDatas();   

@@ -16,10 +16,13 @@ private $reforge;
   private function getDatasbyApi(){
     return getDatasbyDb();  // eventuell an dieser stelle ncohmal ne Spezielle Funktion
                             //moechte aber vermeiden das zu viele Queries hintereinander an die API gehen
-                            //daher die Items immer zusammen mit dem Char neu Laden. 
+                            //daher die Itemtools immer zusammen mit dem Char neu Laden. 
   }
-public function getDatas(){
-}
-public function saveDatas(){
-}  
+  public function getDatas(){
+    return getDatasbyDb();
+  
+  }
+  public function saveDatas(){
+    
+  }  
 } 
