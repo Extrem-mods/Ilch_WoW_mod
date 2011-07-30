@@ -91,7 +91,7 @@ class Char extends Api{
     } 
     return true;
     //! TODO Fur jeden angegebenen Mod muss eine Intsanz der entsprecvhenden Klasse angelegt werden,
-    // und die Dtaen die vorher in die DB zu laden sind aus der DB ion die KLassne geladen werden.
+    // und die Dtaen die vorher in die DB zu laden sind aus der DB in die KLassne geladen werden.
   }
   
   public function saveDatas(){
