@@ -6,12 +6,13 @@ defined ('main') or die ( 'no direct access' );
 
 define('NONE', 0);
 define('WITH_STATS', 1);
-define('WITH_items', 2);
+define('WITH_ITEMS', 2);
 define('WITH_APPEARANCE', 4);
 define('WITH_TALENTS', 8);
 define('WITH_TITLES', 16);
 define('WITH_PROFESSIONS', 32);
 define('WITH_COMPANIONS', 64);
+define('WITH_PROGRESSION', 128);
 
 
 class Char extends Api{
