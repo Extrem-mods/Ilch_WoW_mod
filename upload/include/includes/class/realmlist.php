@@ -30,6 +30,9 @@ protected function getDatasByDb(){
     return $this->_list[$slug];
   }
   public function saveDatas(){
+    foreach($_list as $realm){
+      $realm->saveDatas();
+    }
   }
   
   public function getSlugs($asList=false){

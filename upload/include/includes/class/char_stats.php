@@ -2,14 +2,14 @@
 
 defined ('main') or die ( 'no direct access' );
 
-class CharStats implements Api{
+class CharStats extends Api{
   private $_stats = array();
   
   public __construct($cid){
     $_stats['cID'] = $cid;
   }
   
-  private function  getDatasByDb(){
+  protected function  getDatasByDb(){
     $sql =  "SELECT * FROM `prefix_char_stats` WHERE `cID` = {$this->_stats['cID']}";
     $result = db_query($sql);
     if($result = mysql_fetch_assoc($result)){
@@ -17,7 +17,7 @@ class CharStats implements Api{
     }
   }
   
-  private function  getDatasByapi(){
+  protected function  getDatasByapi(){
     return false;
   }
   

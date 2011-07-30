@@ -1,9 +1,9 @@
 <?php
 
 class Guild extends Api{
-private function getDatasByDb(){
+protected function getDatasByDb(){
 }
-private function getDatasByapi(){
+protected function getDatasByapi(){
 }
 public function getDatas(){
 }

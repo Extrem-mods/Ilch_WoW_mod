@@ -13,9 +13,9 @@ private $_reforge;
     $this->_eiID= $id;
     getDatas();
   }
-  private function getDatasbyDb(){
+  protected function getDatasbyDb(){
   }
-  private function getDatasbyApi(){
+  protected function getDatasbyApi(){
     return getDatasbyDb();  // eventuell an dieser stelle ncohmal ne Spezielle Funktion
                             //moechte aber vermeiden das zu viele Queries hintereinander an die API gehen
                             //daher die Itemtools immer zusammen mit dem Char neu Laden. 

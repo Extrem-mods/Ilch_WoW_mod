@@ -1,6 +1,6 @@
 <?php
 
-class Item implements Api{
+class Item extends Api{
   private $_id;
   private $_name;
   private $_icon;
@@ -12,7 +12,7 @@ class Item implements Api{
     getDatas();
   }
   
-  private function getDatasbyDb(){
+  protected function getDatasbyDb(){
   $query = "SELECT `name`, `icon`, `quality FROM `prefix_items` WHERE `iID` = $_id";
   $result =  db_query($sql);
     if($result = mysql_fetch_array($result)){                   
@@ -31,7 +31,7 @@ class Item implements Api{
     return true; 
   }
   
-  private function getDatasbyApi(){
+  protected function getDatasbyApi(){
     $url = 'http://eu.battle.net/api/wow/data/item/';
     $curl = new Curl();
 	  $curl->setURL($url.$this->_id);
