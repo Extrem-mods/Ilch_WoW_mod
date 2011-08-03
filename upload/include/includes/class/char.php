@@ -2,8 +2,6 @@
 # WoW Char mod by finke
 # Support: http://www.extrem-mods.de
 
-defined ('main') or die ( 'no direct access' );
-
 define('NONE', 0);
 define('WITH_STATS', 1);
 define('WITH_ITEMS', 2);
@@ -30,9 +28,12 @@ class Char extends Api{
   
   private $_mods = array();
   
-  public function __construct($name, $realm, $loadData=true, $mods = NONE){
-    $this->_name = $name;
-    $this->_realm = $realm;
+  public function __construct($name, $realm = NULL, $loadData=true, $mods = NONE){
+    if($realm == NULL)  $_cID = $name;
+    else{     
+      $this->_name = $name;
+      $this->_realm = $realm;
+    }
     if($loadData) $this->getDatas($mods);   
   }
   /*
@@ -94,20 +95,17 @@ class Char extends Api{
 	  $curl->setURL($url);
 	  $tmp = json_decode($curl->getResult(), true);
     var_dump($tmp);
+    //!TODO
+    
     $this->saveDatas();
     unset($curl); 
 }
 
   public function getDatas($mods = NONE){ 
     if(!getDatasByDb()){
-        return getDatasbyApi();  
+        return getDatasbyApi($mods);  
     }
-    
-    
-     
     return true;
-    //! TODO Fur jeden angegebenen Mod muss eine Intsanz der entsprecvhenden Klasse angelegt werden,
-    // und die Dtaen die vorher in die DB zu laden sind aus der DB in die KLassne geladen werden.
   }
   
   public function saveDatas(){

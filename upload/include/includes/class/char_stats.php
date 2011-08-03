@@ -22,7 +22,7 @@ class CharStats extends Api{
     $this->_stats = $result;   
     }
   }
-  /**Daten werden Der Funktion übergeben, nur im notaff besteht die möglchkeit sei aus der API zu holen
+  /**Daten werden der Funktion uebergeben, nur im Notfall besteht die moeglchkeit sei aus der API zu holen
    *
    */     
   protected function getDatasByapi($daten, $api = FALSE){
