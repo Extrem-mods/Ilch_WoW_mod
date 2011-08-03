@@ -76,7 +76,20 @@ class Char extends Api{
   protected function getDatasByapi($mods = NONE){
     if($this->_name == NULL || $this->_realm== NULL)  return false;
     //! TODO Laden der gewuenschten Mods
-    $url = 'http://eu.battle.net/api/wow/character/'.$this->_realm.'/'. $this->_name;
+    if($mods > 0){
+    $options = '?fields='
+    if(WITH_STATS & $mods) $options .= 'stats,';  
+    if(WITH_ITEMS & $mods)  $options .= 'items,'; 
+    if(WITH_APPEARANCE & $mods)  $options .= 'appearance,'; 
+    if(WITH_TALENTS & $mods)  $options .= 'talents,'; 
+    if(WITH_TITLES & $mods)  $options .= 'titles,'; 
+    if(WITH_PROFESSIONS & $mods)  $options .= 'professions,'; 
+    if(WITH_COMPANIONS & $mods)  $options .= 'companions,'; 
+    if(WITH_PROGRESSION & $mods)  $options .= 'progression,';
+    $options = substr($options,0,-1);
+    }else $options = ''; 
+     
+    $url = 'http://eu.battle.net/api/wow/character/'.$this->_realm.'/'. $this->_name . $options;
     $curl = new Curl();
 	  $curl->setURL($url);
 	  $tmp = json_decode($curl->getResult(), true);
@@ -85,10 +98,13 @@ class Char extends Api{
     unset($curl); 
 }
 
-  public function getDatas($mods = NONE){
+  public function getDatas($mods = NONE){ 
     if(!getDatasByDb()){
         return getDatasbyApi();  
-    } 
+    }
+    
+    
+     
     return true;
     //! TODO Fur jeden angegebenen Mod muss eine Intsanz der entsprecvhenden Klasse angelegt werden,
     // und die Dtaen die vorher in die DB zu laden sind aus der DB in die KLassne geladen werden.

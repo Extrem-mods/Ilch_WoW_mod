@@ -5,8 +5,14 @@ defined ('main') or die ( 'no direct access' );
 class CharStats extends Api{
   private $_stats = array();
   
-  public __construct($cid){
+  public __construct($cid, $daten = NULL){
     $_stats['cID'] = $cid;
+    if(!empty($daten) && is_array($daten)){
+      getDatasByapi($cid);
+      saveDatas();
+    }else{
+      getDatas();
+    }
   }
   
   protected function  getDatasByDb(){
@@ -16,15 +22,17 @@ class CharStats extends Api{
     $this->_stats = $result;   
     }
   }
-  
-  protected function  getDatasByapi(){
-    return false;
+  /**Daten werden Der Funktion übergeben, nur im notaff besteht die möglchkeit sei aus der API zu holen
+   *
+   */     
+  protected function getDatasByapi($daten, $api = FALSE){
+    
   }
   
   public function getDatas(){
     return getDatasByDb();
   }
   
-  public function  saveDatas(){
+  public function saveDatas(){
   }
 }
