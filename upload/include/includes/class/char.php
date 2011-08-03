@@ -2,8 +2,6 @@
 # WoW Char mod by finke
 # Support: http://www.extrem-mods.de
 
-defined ('main') or die ( 'no direct access' );
-
 define('NONE', 0);
 define('WITH_STATS', 1);
 define('WITH_ITEMS', 2);
@@ -30,9 +28,12 @@ class Char extends Api{
   
   private $_mods = array();
   
-  public function __construct($name, $realm, $loadData=true, $mods = NONE){
-    $this->_name = $name;
-    $this->_realm = $realm;
+  public function __construct($name, $realm = NULL, $loadData=true, $mods = NONE){
+    if($realm == NULL)  $_cID = $name;
+    else{     
+      $this->_name = $name;
+      $this->_realm = $realm;
+    }
     if($loadData) $this->getDatas($mods);   
   }
   /*
@@ -76,22 +77,35 @@ class Char extends Api{
   protected function getDatasByapi($mods = NONE){
     if($this->_name == NULL || $this->_realm== NULL)  return false;
     //! TODO Laden der gewuenschten Mods
-    $url = 'http://eu.battle.net/api/wow/character/'.$this->_realm.'/'. $this->_name;
+    if($mods > 0){
+    $options = '?fields='
+    if(WITH_STATS & $mods) $options .= 'stats,';  
+    if(WITH_ITEMS & $mods)  $options .= 'items,'; 
+    if(WITH_APPEARANCE & $mods)  $options .= 'appearance,'; 
+    if(WITH_TALENTS & $mods)  $options .= 'talents,'; 
+    if(WITH_TITLES & $mods)  $options .= 'titles,'; 
+    if(WITH_PROFESSIONS & $mods)  $options .= 'professions,'; 
+    if(WITH_COMPANIONS & $mods)  $options .= 'companions,'; 
+    if(WITH_PROGRESSION & $mods)  $options .= 'progression,';
+    $options = substr($options,0,-1);
+    }else $options = ''; 
+     
+    $url = 'http://eu.battle.net/api/wow/character/'.$this->_realm.'/'. $this->_name . $options;
     $curl = new Curl();
 	  $curl->setURL($url);
 	  $tmp = json_decode($curl->getResult(), true);
     var_dump($tmp);
+    //!TODO
+    
     $this->saveDatas();
     unset($curl); 
 }
 
-  public function getDatas($mods = NONE){
+  public function getDatas($mods = NONE){ 
     if(!getDatasByDb()){
-        return getDatasbyApi();  
-    } 
+        return getDatasbyApi($mods);  
+    }
     return true;
-    //! TODO Fur jeden angegebenen Mod muss eine Intsanz der entsprecvhenden Klasse angelegt werden,
-    // und die Dtaen die vorher in die DB zu laden sind aus der DB in die KLassne geladen werden.
   }
   
   public function saveDatas(){

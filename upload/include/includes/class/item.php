@@ -9,6 +9,7 @@ class Item extends Api{
   private static const REMOTE_ICON_PATH = 'http://eu.media.blizzard.com/wow/icons/56/';
   
   public function __construct($id){
+    $_id = $id;
     getDatas();
   }
   
