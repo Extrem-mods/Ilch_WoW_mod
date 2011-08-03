@@ -1,7 +1,7 @@
 CREATE TABLE `prefix_realms` (
   `slug`        varchar(15)                   NOT NULL  PRIMARY KEY,
   `name`        varchar(25)                   NOT NULL,
-  `type`        enum('pvp', 'pve', 'rp')      NOT NULL,
+  `type`        enum('pvp', 'pve', 'rp', 'rppvp')      NOT NULL,
   `queue`       BOOL                          NOT NULL,
   `status`      BOOL                          NOT NULL,
   `population`  enum('low', 'medium', 'high') NOT NULL,
