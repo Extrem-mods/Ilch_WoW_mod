@@ -12,7 +12,7 @@ require_once('include/includes/class/curl.php');
 require_once('include/includes/class/api.php');
 require_once('include/includes/class/realmlist.php');
 require_once('include/includes/class/realm.php');
-//require_once('include/includes/class/char.php');
+require_once('include/includes/class/char.php');
 
 
 
@@ -35,6 +35,8 @@ require_once('include/includes/func/listen.php');
 require_once('include/includes/func/forum.php');
 require_once('include/includes/func/warsys.php'); 
 require_once('include/includes/func/ic_mime_type.php');
+require_once('include/includes/func/wow_char_mod.php');
+
 
 # load something else
 require_once ('include/includes/lang/de.php');
