@@ -29,56 +29,50 @@ class Char extends Api{
   private $_mods = array();
   
   public function __construct($name, $realm = NULL, $loadData=true, $mods = NONE){
-    if($realm == NULL)  $_cID = $name;
-    else{     
+    if($realm == NULL && is_numeric($name)){
+    $this->_cID = $name;
+    }else{     
       $this->_name = $name;
       $this->_realm = $realm;
     }
     if($loadData) $this->getDatas($mods);   
-  }
-  /*
-  public function __construct($cid, $loadData=true, $mods = NONE){
-    $this->_cID = $cid;
-    if($loadData) $this->getDatas($mods);  
-  }
-  /**/
-            
+  }   
   
   // laed einen Char aus der DB 
   protected function getDatasByDb($ignorTime = false){
     $sql ="SELECT
     `cID` , `name` , `level` , `realm` , `class`, `race`, `gender` , `achievementPoints` , `thumbnail` , UNIX_TIMESTAMP(`lastModified`) as  `lastModified`, UNIX_TIMESTAMP(`updated`) as `updated` 
     FROM `prefix_chars`
-    WHERE (`cID` ={$this->_cID} OR (`name` LIKE '{$this->_name}' AND `realm` LIKE '{$this->_realm}')) ". ($ignorTime?"":"AND `updated` > (UNIX_TIMESTAMP() - 60*60*24)");
+    WHERE (`cID` = '{$this->_cID}' OR (`name` LIKE '{$this->_name}' AND `realm` LIKE '{$this->_realm}'))";
     $result =  db_query($sql);
     if($result = mysql_fetch_array($result)){
-      $this->_cID = $result['cID'];             
+      $this->_cID = $result['cID'];
       $this->_name = $result['name'];           
-      $this->_level = $result['level'];           
       $this->_realm = $result['realm'];
-      $this->_class = $result['class'];         
-      $this->_race = $result['race'];          
-      $this->_gender = $result['gender'];           
-      $this->_achievementPoints = $result['achievementPoints'];
-      $this->_thumbnail = $result['thumbnail'];        
-      $this->_lastModified = $result['lastModified'];     
-      $this->_updated = $result['updated'];
-      return true;
-    }else{
-      $result = db_query("SELECT `name` , `realm` FROM `prefix_chars` WHERE (`cID` ={$this->_cID}");
-      if($result = mysql_fetch_array($result)){
-        $this->_name = $result['name'];                      
-        $this->_realm = $result['realm'];
+      if(empty($result['level']) || empty($result['class']) || empty($result['race'])){
+        return NULL;      
+      }else{
+        if($ignorTime || $result['updated'] > time() -60*60*24){           
+          $this->_level = $result['level'];           
+          $this->_class = $result['class'];         
+          $this->_race = $result['race'];          
+          $this->_gender = $result['gender'];           
+          $this->_achievementPoints = $result['achievementPoints'];
+          $this->_thumbnail = $result['thumbnail'];        
+          $this->_lastModified = $result['lastModified'];     
+          $this->_updated = $result['updated'];
+          return true;
+        }
       }
-      return false;
     }
+    return false;
   }
   // laed einen Char aus dem WOW Arsenal
   protected function getDatasByapi($mods = NONE){
     if($this->_name == NULL || $this->_realm== NULL)  return false;
     //! TODO Laden der gewuenschten Mods
     if($mods > 0){
-    $options = '?fields='
+    $options = '?fields=';
     if(WITH_STATS & $mods) $options .= 'stats,';  
     if(WITH_ITEMS & $mods)  $options .= 'items,'; 
     if(WITH_APPEARANCE & $mods)  $options .= 'appearance,'; 
@@ -87,25 +81,32 @@ class Char extends Api{
     if(WITH_PROFESSIONS & $mods)  $options .= 'professions,'; 
     if(WITH_COMPANIONS & $mods)  $options .= 'companions,'; 
     if(WITH_PROGRESSION & $mods)  $options .= 'progression,';
-    $options = substr($options,0,-1);
+    $options = substr($options,0,-1); // das letzte ',' abschneiden; stört zwar nicht, ist aber unschön
     }else $options = ''; 
      
     $url = 'http://eu.battle.net/api/wow/character/'.$this->_realm.'/'. $this->_name . $options;
     $curl = new Curl();
 	  $curl->setURL($url);
 	  $tmp = json_decode($curl->getResult(), true);
-    var_dump($tmp);
-    //!TODO
-    
+    	               
+    $this->_name = $tmp['name'];           
+    $this->_level = $tmp['level'];           
+    $this->_realm = $tmp['realm'];
+    $this->_class = $tmp['class'];         
+    $this->_race = $tmp['race'];          
+    $this->_gender = $tmp['gender'];           
+    $this->_achievementPoints = $tmp['achievementPoints'];
+    $this->_thumbnail = $tmp['thumbnail'];        
+    $this->_lastModified = $tmp['lastModified'];     
+    $this->_updated = time();
+       
     $this->saveDatas();
     unset($curl); 
 }
-
+  //!TODO Muss mal nochmal Ueberarbeitet werden
   public function getDatas($mods = NONE){ 
-    if(!getDatasByDb()){
-        return getDatasbyApi($mods);  
-    }
-    return true;
+    if($this->getDatasByDb($mods) == true) return true;
+    return $this->getDatasbyApi($mods);
   }
   
   public function saveDatas(){
@@ -115,12 +116,12 @@ class Char extends Api{
         VALUES 
         ('{$this->_name}', '{$this->_level}', '{$this->_realm}', '{$this->_class}', '{$this->_race}', '{$this->_gender}', '{$this->_achievementPoints}', '{$this->_thumbnail}', '{$this->_lastModified}')
         ON DUPLICATE KEY UPDATE
-        `name` =  VALUES(`name`), `level` = VALUES(`level`), `realm` = VALUES(`realm`), `class` = VALUES(`class`), `race` = VALUES(`race`), `gender` = VALUES(`gender`), `achievementPoints` = VALUES(`achievementPoints`), `thumbnail` = VALUES(`thumbnail`), `lastModified`= VALUES(`lastModified`)
-        WHERE `cID` = {$this->cID};";
+        `name` =  VALUES(`name`), `level` = VALUES(`level`), `realm` = VALUES(`realm`), `class` = VALUES(`class`), `race` = VALUES(`race`), `gender` = VALUES(`gender`), `achievementPoints` = VALUES(`achievementPoints`), `thumbnail` = VALUES(`thumbnail`), `lastModified`= VALUES(`lastModified`)";
+        return db_query($sql);
   }
   
   public function getAsArray(){
-  return array(
+  $tmp = array(
   'cID' =>$this->_cID,             
   'name' => $this->_name,           
   'level' => $this->_level,           
@@ -132,11 +133,13 @@ class Char extends Api{
   'thumbnail' => $this->_thumbnail,        
   'lastModified' => $this->_lastModified,     
   'update' => $this->_updated);
-  }
+  return $tmp;
   
+  }
+  //!TODO Auf die Konstanten umstellen   
   public function getMods($mod= ''){
     if(!empty($mod)){
-      if(!is_array($mod)) $mod = array('mod');
+      if(!is_array($mod)) $mod = array($mod);
       $tmp = array();
       foreach ($mod as $name){
         if(in_array($name, $this->_mods)){
