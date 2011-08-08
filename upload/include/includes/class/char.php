@@ -23,7 +23,7 @@ class Char extends Api{
   private $_gender;           
   private $_achievementPoints;
   private $_thumbnail;        
-  private $_lastModified;     
+  private $_lastModified = NULL;     
   private $_updated;
   
   private $_mods = array();
@@ -88,7 +88,10 @@ class Char extends Api{
     $curl = new Curl();
 	  $curl->setURL($url);
 	  $tmp = json_decode($curl->getResult(), true);
-    	               
+    if(isset($tmp['status']) && $tmp['status'] == 'nok'){
+      $this->_lastError = $tmp['reason'];
+      return false;
+    }	               
     $this->_name = $tmp['name'];           
     $this->_level = $tmp['level'];           
     $this->_realm = $tmp['realm'];
@@ -97,11 +100,11 @@ class Char extends Api{
     $this->_gender = $tmp['gender'];           
     $this->_achievementPoints = $tmp['achievementPoints'];
     $this->_thumbnail = $tmp['thumbnail'];        
-    $this->_lastModified = $tmp['lastModified'];     
-    $this->_updated = time();
-       
+    $this->_lastModified = floor($tmp['lastModified'] / 1000); // Blizzard logt auf die Microsekunde Genau :)     
+    $this->_updated = time();       
     $this->saveDatas();
-    unset($curl); 
+    unset($curl);
+    return true; 
 }
   //!TODO Muss mal nochmal Ueberarbeitet werden
   public function getDatas($mods = NONE){ 
@@ -114,13 +117,14 @@ class Char extends Api{
     $sql="INSERT INTO `prefix_chars` 
         (`name` , `level` , `realm` , `class`, `race`, `gender` , `achievementPoints` , `thumbnail` , `lastModified`)
         VALUES 
-        ('{$this->_name}', '{$this->_level}', '{$this->_realm}', '{$this->_class}', '{$this->_race}', '{$this->_gender}', '{$this->_achievementPoints}', '{$this->_thumbnail}', '{$this->_lastModified}')
+        ('{$this->_name}', '{$this->_level}', '{$this->_realm}', '{$this->_class}', '{$this->_race}', '{$this->_gender}', '{$this->_achievementPoints}', '{$this->_thumbnail}', FROM_UNIXTIME({$this->_lastModified}))
         ON DUPLICATE KEY UPDATE
         `name` =  VALUES(`name`), `level` = VALUES(`level`), `realm` = VALUES(`realm`), `class` = VALUES(`class`), `race` = VALUES(`race`), `gender` = VALUES(`gender`), `achievementPoints` = VALUES(`achievementPoints`), `thumbnail` = VALUES(`thumbnail`), `lastModified`= VALUES(`lastModified`)";
         return db_query($sql);
   }
   
   public function getAsArray(){
+  if($this->_name == NULL || $this->_realm== NULL || $this->_lastModified == NULL)  return false;
   $tmp = array(
   'cID' =>$this->_cID,             
   'name' => $this->_name,           
@@ -133,9 +137,9 @@ class Char extends Api{
   'thumbnail' => $this->_thumbnail,        
   'lastModified' => $this->_lastModified,     
   'update' => $this->_updated);
-  return $tmp;
-  
+  return $tmp;  
   }
+  
   //!TODO Auf die Konstanten umstellen   
   public function getMods($mod= ''){
     if(!empty($mod)){
