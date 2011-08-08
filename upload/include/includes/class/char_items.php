@@ -5,7 +5,8 @@ class CharItems extends Api{
                                   'wrist', 'hands', 'waist', 'legs', 'feet', 'finger1',
                                   'finger2', 'trinket1', 'trinket2','mainHand', 'offHand', 'ranged');
 private $_items = array();
-  public function __construct($cid){
+  public function __construct($cid, $datas = NULL){
+    echo 'test';
   
   }
   protected function getDatasbyDb(){

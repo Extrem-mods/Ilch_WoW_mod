@@ -11,11 +11,11 @@ class Item extends Api{
   public function __construct($id){
     $this->_LOCAL_ICON_PATH = dirname($_SERVER['PHP_SELF']). 'include/images/wow_mod/items/';
     $this->_id = $id;
-    getDatas();
+    $this->getDatas();
   }
   
   protected function getDatasbyDb(){
-  $query = "SELECT `name`, `icon`, `quality FROM `prefix_items` WHERE `iID` = $_id";
+  $sql = "SELECT `name`, `icon`, `quality` FROM `prefix_items` WHERE `iID` = {$this->_id}";
   $result =  db_query($sql);
     if($result = mysql_fetch_array($result)){                   
       $this->_name = $result['name'];
@@ -27,8 +27,8 @@ class Item extends Api{
   }
   
   public function getDatas(){
-    if(!getDatasByDb()){
-        return getDatasbyApi();  
+    if(!$this->getDatasByDb()){
+        return $this->getDatasbyApi();  
       }
     return true; 
   }
@@ -37,24 +37,29 @@ class Item extends Api{
     $url = 'http://eu.battle.net/api/wow/data/item/';
     $curl = new Curl();
 	  $curl->setURL($url.$this->_id);
-	  $tmp = json_decode($curl->getResult(), true);
-    var_dump($tmp);
+	  echo $url.$this->_id;
+	  $tmp = json_decode($curl->getResult(), true);    
     unset($curl);
-    
-    saveDatas(); 
+    if(empty($tmp) || (isset($tmp['status']) && $tmp['status'] == 'nok')){
+      $this->_lastError = (isset($tmp['reason'])?$tmp['reason']:'Keine Daten Empfangen');
+      return false;
+    }
+    var_dump($tmp);	              
+       
+    $this->saveDatas(); 
   }
   
   public function saveDatas(){
+    $sql = "INSERT INTO `prefix_items` (`iID`, `name`, `icon`, `quality`) VALUES ({$this->_id}}, '".mysql_real_escape_string($this->_name)."', '{$this->_icon}', {$this->_quality})";
   }
   
   public function getAsArray(){
-    $url = getIconUrl();
     return array(
       'id' =>$this->_id,
       'name' =>$this->_name,
       'icon' =>$this->_icon,
       'quality' =>$this->_quality,
-      'URL' => $url  
+      'URL' => getIconUrl()  
     );
   }
   
