@@ -23,7 +23,7 @@ class Char extends Api{
   private $_gender;           
   private $_achievementPoints;
   private $_thumbnail;        
-  private $_lastModified;     
+  private $_lastModified = NULL;     
   private $_updated;
   
   private $_mods = array();
@@ -87,7 +87,11 @@ class Char extends Api{
     $url = 'http://eu.battle.net/api/wow/character/'.$this->_realm.'/'. $this->_name . $options;
     $curl = new Curl();
 	  $curl->setURL($url);
-	  $tmp = json_decode($curl->getResult(), true);	               
+	  $tmp = json_decode($curl->getResult(), true);
+    if(isset($tmp['status']) && $tmp['status'] == 'nok'){
+      $this->_lastError = $tmp['reason'];
+      return false;
+    }	               
     $this->_name = $tmp['name'];           
     $this->_level = $tmp['level'];           
     $this->_realm = $tmp['realm'];
@@ -96,10 +100,11 @@ class Char extends Api{
     $this->_gender = $tmp['gender'];           
     $this->_achievementPoints = $tmp['achievementPoints'];
     $this->_thumbnail = $tmp['thumbnail'];        
-    $this->_lastModified = ($tmp['lastModified'] / 1000); // Blizzard logt auf die Microsekunde Genau :)     
+    $this->_lastModified = floor($tmp['lastModified'] / 1000); // Blizzard logt auf die Microsekunde Genau :)     
     $this->_updated = time();       
     $this->saveDatas();
-    unset($curl); 
+    unset($curl);
+    return true; 
 }
   //!TODO Muss mal nochmal Ueberarbeitet werden
   public function getDatas($mods = NONE){ 
@@ -119,6 +124,7 @@ class Char extends Api{
   }
   
   public function getAsArray(){
+  if($this->_name == NULL || $this->_realm== NULL || $this->_lastModified == NULL)  return false;
   $tmp = array(
   'cID' =>$this->_cID,             
   'name' => $this->_name,           
@@ -131,9 +137,9 @@ class Char extends Api{
   'thumbnail' => $this->_thumbnail,        
   'lastModified' => $this->_lastModified,     
   'update' => $this->_updated);
-  return $tmp;
-  
+  return $tmp;  
   }
+  
   //!TODO Auf die Konstanten umstellen   
   public function getMods($mod= ''){
     if(!empty($mod)){
