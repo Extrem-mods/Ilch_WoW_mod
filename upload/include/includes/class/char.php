@@ -28,7 +28,7 @@ class Char extends Api{
   
   private $_mods = array();
   
-  public function __construct($name, $realm = NULL, $loadData=true, $mods = NONE){
+  public function __construct($name, $realm = NULL, $mods = NONE, $loadData=true){
     if($realm == NULL && is_numeric($name)){
     $this->_cID = $name;
     }else{     

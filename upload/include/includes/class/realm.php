@@ -15,7 +15,7 @@ class Realm extends Api{
   protected function getDatasByDb(){
     $result =  db_query("SELECT `name` , `type` , `queue` , `status` , `population` , UNIX_TIMESTAMP(`refresh`) as `time` FROM prefix_realms WHERE `slug` = '{$this->_slug}'");
     if($result = mysql_fetch_array($result)){
-      if($result['time'] < time()-(60*60*24)) return false;
+      if($result['time'] < time()-($allgAr['wow_reload_time']*60)) return false;
       $this->_type = $result['type'];
       $this->_queue  = $result['queue'];
       $this->_status = $result['status'];
@@ -33,13 +33,15 @@ class Realm extends Api{
 	  $curl->setURL($url. '?realms=' . $this->_slug);
 	  $tmp = json_decode($curl->getResult(), true);
     //var_dump($tmp); //array(1) { ["realms"]=> array(1) { [0]=> array(6) { ["type"]=> string(3) "pvp" ["queue"]=> bool(false) ["status"]=> bool(true) ["population"]=> string(4) "high" ["name"]=> string(9) "Blackrock" ["slug"]=> string(9) "blackrock" } } }
+    if(isset($tmp['realms'][1])){ $this->_lastError='Realm nicht gefunden'; return false;}
     $this->_type = $tmp["realms"][0]['type'];
     $this->_queue  = $tmp["realms"][0]['queue'];
     $this->_status = $tmp["realms"][0]['status'];
     $this->_population = $tmp["realms"][0]['population']; 
     $this->_name = addslashes($tmp["realms"][0]['name']); 
     unset($curl);
-    $this->saveDatas(); 
+    $this->saveDatas();
+    return true; 
   }
   
   public function saveDatas(){

@@ -5,11 +5,12 @@ class Item extends Api{
   private $_name;
   private $_icon;
   private $_quality;
-  private static const LOCAL_ICON_PATH = dirname($_SERVER['PHP_SELF']). 'include/images/wow_mod/items/';
-  private static const REMOTE_ICON_PATH = 'http://eu.media.blizzard.com/wow/icons/56/';
+  private  $_LOCAL_ICON_PATH; 
+   const REMOTE_ICON_PATH = 'http://eu.media.blizzard.com/wow/icons/56/';
   
   public function __construct($id){
-    $_id = $id;
+    $this->_LOCAL_ICON_PATH = dirname($_SERVER['PHP_SELF']). 'include/images/wow_mod/items/';
+    $this->_id = $id;
     getDatas();
   }
   
@@ -62,10 +63,10 @@ class Item extends Api{
    * Ansonsten wird es versucht Blizzard zu laden, und lokal zu speichern.
    * Geht das schief, verweist es direkt auf den Bestand von Blizzard       
    */      
-  public getIconUrl(){
+  public function getIconUrl(){
     if(!file_exists(self::LOCAL_ICON_PATH.$_icon.'.jpg')){
       if($this->loadIconFromServer()){
-        return self::LOCAL_ICON_PATH.$_icon.'.jpg'
+        return self::LOCAL_ICON_PATH.$_icon.'.jpg';
       }else{
         return self::REMOTE_ICON_PATH.$_icon.'.jpg';
       }         
@@ -75,7 +76,7 @@ class Item extends Api{
   /**
    *
    */     
-  private loadIconFromServer(){
+  private function loadIconFromServer(){
     return (bool) file_put_contents(
       self::LOCAL_ICON_PATH.$_icon.'.jpg',
       file_get_contents(self::REMOTE_ICON_PATH.$_icon.'.jpg')
