@@ -9,8 +9,10 @@ function getRaceByID($raceID){
   6   =>  'Tauren',
   7   =>  'Gnom',
   8   =>  'Troll',
+  9   =>  'Goblin',
   10  => 	'Blutelf',
-  11 	=>  'Draenei'
+  11 	=>  'Draenei',
+  22  =>  'Worgen'
   );
   return $ID[$raceID]; 
 } 
