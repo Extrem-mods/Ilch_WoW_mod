@@ -42,10 +42,11 @@ $tpl = new tpl ('wow/realm_details');
   while($char = mysql_fetch_assoc($chars)){ 
     $char = new Char($char['cID']);
     $out = $char->getAsArray();
-    $out['color'] = getClassColor($out['class']);    
+    $out['color'] =getClassColor($out['class']);     
     $out['class'] = getClassByID($out['class']);
     $out['race'] = getRaceByID($out['race']);
     $out['gender'] = ($out['gender'] == 1?'Weiblich':'Männlich');
+    
     unset($char);
     $tpl->set_ar_out($out,3);
   }

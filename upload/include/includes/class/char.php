@@ -87,8 +87,7 @@ class Char extends Api{
     $url = 'http://eu.battle.net/api/wow/character/'.$this->_realm.'/'. $this->_name . $options;
     $curl = new Curl();
 	  $curl->setURL($url);
-	  $tmp = json_decode($curl->getResult(), true);
-    	               
+	  $tmp = json_decode($curl->getResult(), true);	               
     $this->_name = $tmp['name'];           
     $this->_level = $tmp['level'];           
     $this->_realm = $tmp['realm'];
@@ -97,9 +96,8 @@ class Char extends Api{
     $this->_gender = $tmp['gender'];           
     $this->_achievementPoints = $tmp['achievementPoints'];
     $this->_thumbnail = $tmp['thumbnail'];        
-    $this->_lastModified = $tmp['lastModified'];     
-    $this->_updated = time();
-       
+    $this->_lastModified = ($tmp['lastModified'] / 1000); // Blizzard logt auf die Microsekunde Genau :)     
+    $this->_updated = time();       
     $this->saveDatas();
     unset($curl); 
 }
@@ -114,7 +112,7 @@ class Char extends Api{
     $sql="INSERT INTO `prefix_chars` 
         (`name` , `level` , `realm` , `class`, `race`, `gender` , `achievementPoints` , `thumbnail` , `lastModified`)
         VALUES 
-        ('{$this->_name}', '{$this->_level}', '{$this->_realm}', '{$this->_class}', '{$this->_race}', '{$this->_gender}', '{$this->_achievementPoints}', '{$this->_thumbnail}', '{$this->_lastModified}')
+        ('{$this->_name}', '{$this->_level}', '{$this->_realm}', '{$this->_class}', '{$this->_race}', '{$this->_gender}', '{$this->_achievementPoints}', '{$this->_thumbnail}', FROM_UNIXTIME({$this->_lastModified}))
         ON DUPLICATE KEY UPDATE
         `name` =  VALUES(`name`), `level` = VALUES(`level`), `realm` = VALUES(`realm`), `class` = VALUES(`class`), `race` = VALUES(`race`), `gender` = VALUES(`gender`), `achievementPoints` = VALUES(`achievementPoints`), `thumbnail` = VALUES(`thumbnail`), `lastModified`= VALUES(`lastModified`)";
         return db_query($sql);
