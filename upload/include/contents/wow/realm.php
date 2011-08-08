@@ -21,7 +21,14 @@ foreach($slugs as $slug){
 }
 $tpl->out(2);
 }else{
-$slug= $menu->get(2);
+$i = 2;
+$slug = '';
+while($menu->get($i) != NULL){
+$slug .= $menu->get($i).'-';
+$i++;
+}
+$slug = substr($slug,0,-1);
+echo 'slug:'.$slug; 
 $realm = new Realm($slug);
 
 $title = $allgAr['title'].' :: WOW Mod :: Details zu ' . $realm->getName();

@@ -52,7 +52,7 @@ class Char extends Api{
       if(empty($result['level']) || empty($result['class']) || empty($result['race'])){
         return NULL;      
       }else{
-        if($ignorTime || $result['updated'] > time() -60*60*24){           
+        if($ignorTime || $result['updated'] > time() -($allgAr['wow_reload_time']*60)){           
           $this->_level = $result['level'];           
           $this->_class = $result['class'];         
           $this->_race = $result['race'];          
