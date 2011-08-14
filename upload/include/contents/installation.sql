@@ -9,7 +9,7 @@ CREATE TABLE `prefix_realms` (
   `status`      BOOL                          NOT NULL,
   `population`  enum('low', 'medium', 'high') NOT NULL,
   `refresh`     TIMESTAMP                     NOT NULL
-)ENGINE=MyISAM COLLATE utf8_general_ci;
+)ENGINE=InnoDB COLLATE utf8_general_ci;
 
 CREATE TABLE `prefix_chars`(
   `cID`               INT               NOT NULL  AUTO_INCREMENT  PRIMARY KEY,
@@ -24,7 +24,7 @@ CREATE TABLE `prefix_chars`(
   `lastModified`      TIMESTAMP         NOT NULL,
   `updated`           TIMESTAMP         NOT NULL,
   UNIQUE(`name`, `realm`)
-)ENGINE=MyISAM COLLATE utf8_general_ci;
+)ENGINE=InnoDB COLLATE utf8_general_ci;
 
 CREATE TABLE `prefix_guild`(
 `gID`               INT               NOT NULL AUTO_INCREMENT ,
@@ -39,7 +39,7 @@ CREATE TABLE `prefix_guild`(
 `borderColor`       VARCHAR(8)        NOT NULL,
 `backgroundColor`   VARCHAR(8)        NOT NULL, 
 PRIMARY KEY  (`gID`)
-)ENGINE=MyISAM COLLATE utf8_general_ci;
+)ENGINE=InnoDB COLLATE utf8_general_ci;
 
 CREATE TABLE `prefix_items`(
 `iID`     int               NOT NULL,
@@ -47,7 +47,7 @@ CREATE TABLE `prefix_items`(
 `icon`    varchar(255)      NOT NULL,
 `quality` TINYINT UNSIGNED  NULL,
 PRIMARY KEY  (`iID`)
-)ENGINE=MyISAM COLLATE utf8_general_ci;
+)ENGINE=InnoDB COLLATE utf8_general_ci;
 
 CREATE TABLE `prefix_items_tool`(
 `eiID`    int         NOT NULL AUTO_INCREMENT ,
@@ -59,10 +59,10 @@ CREATE TABLE `prefix_items_tool`(
 `set`     varchar(50) NOT NULL,
 `reforge` int         NOT NULL, 
 PRIMARY KEY  (`eiID`)
-)ENGINE=MyISAM COLLATE utf8_general_ci;
+)ENGINE=InnoDB COLLATE utf8_general_ci;
 
 #CREATE TABLE `prefix_char_achievements`(
-#)ENGINE=MyISAM COLLATE utf8_general_ci;
+#)ENGINE=InnoDB COLLATE utf8_general_ci;
 
 CREATE TABLE `prefix_char_appearance`(
 `cID`               INT NOT NULL  PRIMARY KEY,
@@ -73,7 +73,7 @@ CREATE TABLE `prefix_char_appearance`(
 `featureVariation`  TINYINT UNSIGNED NOT NULL,
 `showHelm`          BOOL NOT NULL,
 `showCloak`         BOOL NOT NULL
-)ENGINE=MyISAM COLLATE utf8_general_ci;
+)ENGINE=InnoDB COLLATE utf8_general_ci;
 
 CREATE TABLE `prefix_char_items`(
 `cID`                       INT NOT NULL,
@@ -99,7 +99,7 @@ CREATE TABLE `prefix_char_items`(
 `offHand`                   INT NULL,
 `ranged`                    INT NULL,
 PRIMARY KEY(`cID`)
-)ENGINE=MyISAM COLLATE utf8_general_ci;
+)ENGINE=InnoDB COLLATE utf8_general_ci;
 
 
 CREATE TABLE `prefix_char_talents`(
@@ -151,18 +151,18 @@ CREATE TABLE `prefix_char_talents`(
 `secMinor2Item`     SMALLINT    NULL,
 `secminor2IGlyphe`  INT         NULL,
 PRIMARY KEY  (`cID`)
-)ENGINE=MyISAM COLLATE utf8_general_ci;
+)ENGINE=InnoDB COLLATE utf8_general_ci;
 
 CREATE TABLE `prefix_titles`(
 `tID`   SMALLINT  UNSIGNED  NOT NULL  PRIMARY KEY,
 `name`  VARCHAR(100)        NOT NULL
-)ENGINE=MyISAM COLLATE utf8_general_ci;
+)ENGINE=InnoDB COLLATE utf8_general_ci;
 
 CREATE TABLE `prefix_char_titles`(
 `cID` INT                 NOT NULL,
 `tID` SMALLINT  UNSIGNED  NOT NULL,
 UNIQUE(`cID`, `tID`)
-)ENGINE=MyISAM COLLATE utf8_general_ci;
+)ENGINE=InnoDB COLLATE utf8_general_ci;
 
 CREATE TABLE `prefix_char_stats`(
 `cID`               INT                             NOT NULL  PRIMARY KEY,
@@ -214,22 +214,22 @@ CREATE TABLE `prefix_char_stats`(
 `rangedCrit`        FLOAT(8,6)                      NOT NULL,
 `rangedCritRating`  INT                             NOT NULL,
 `rangedHitRating`   INT                             NOT NULL
-)ENGINE=MyISAM COLLATE utf8_general_ci;
+)ENGINE=InnoDB COLLATE utf8_general_ci;
 
 #CREATE TABLE `prefix_char_reputation`(
-#)ENGINE=MyISAM COLLATE utf8_general_ci;
+#)ENGINE=InnoDB COLLATE utf8_general_ci;
 
 CREATE TABLE `prefix_char_guild`(
 `cID` int NOT NULL,
 `gID` int NOT NULL,
 UNIQUE(`cID`, `gID`)
-)ENGINE=MyISAM COLLATE utf8_general_ci;
+)ENGINE=InnoDB COLLATE utf8_general_ci;
 
 CREATE TABLE `prefix_professions`(
 `pID`     INT NOT NULL PRIMARY KEY,
 `name`    VARCHAR(50) NOT NULL,
 `icon`    VARCHAR(50) NOT NULL
-)ENGINE=MyISAM COLLATE utf8_general_ci;
+)ENGINE=InnoDB COLLATE utf8_general_ci;
 
 CREATE TABLE `prefix_char_professions`(
 `cID`   INT               NOT NULL,
@@ -237,21 +237,21 @@ CREATE TABLE `prefix_char_professions`(
 `range` SmallINT UNSIGNED NOT NULL,
 `max`   SmallINT UNSIGNED NOT NULL,
 UNIQUE(`cID`, `pID`)
-)ENGINE=MyISAM COLLATE utf8_general_ci;
+)ENGINE=InnoDB COLLATE utf8_general_ci;
 
 CREATE TABLE `prefix_char_companions`(
 `cID`         INT           NOT NULL  PRIMARY KEY,
 `mounts`      VARCHAR(255)  NULL,
 `companions`  VARCHAR(255)  NULL
-)ENGINE=MyISAM COLLATE utf8_general_ci;
+)ENGINE=InnoDB COLLATE utf8_general_ci;
 
 #CREATE TABLE `prefix_char_pets`(
-#)ENGINE=MyISAM COLLATE utf8_general_ci;
+#)ENGINE=InnoDB COLLATE utf8_general_ci;
 
 CREATE TABLE `prefix_instanzen`(
 `inID`  MEDIUMINT     NOT NULL PRIMARY KEY,
 `name`  varchar(30)   NOT NULL
-)ENGINE=MyISAM COLLATE utf8_general_ci;
+)ENGINE=InnoDB COLLATE utf8_general_ci;
 
 CREATE TABLE `prefix_bosse`(
 `bID`           MEDIUMINT     NOT NULL PRIMARY KEY,
@@ -259,7 +259,7 @@ CREATE TABLE `prefix_bosse`(
 `name`          varchar(30)   NOT NULL,
 `normalHealth`  INT UNSIGNED  NULL,
 `heroicHealth`  INT UNSIGNED  NULL
-)ENGINE=MyISAM COLLATE utf8_general_ci;
+)ENGINE=InnoDB COLLATE utf8_general_ci;
 
 CREATE TABLE `prefix_char_progression`(
 `cID`         INT           NOT NULL,
@@ -267,4 +267,21 @@ CREATE TABLE `prefix_char_progression`(
 `normalKills` MEDIUMINT     NOT NULL,
 `heroicKills` MEDIUMINT     NOT NULL,
 UNIQUE(`cID`, `bID`)
-)ENGINE=MyISAM COLLATE utf8_general_ci;
+)ENGINE=InnoDB COLLATE utf8_general_ci;
+
+CREATE TABLE `prefix_char_acc`(
+`cID` INT NOT NULL,
+`aID` INT NOT NULL,
+UNIQUE(`cID`, `aID`)
+)ENGINE=InnoDB COLLATE utf8_general_ci;
+
+CREATE TABLE `prefix_raid_gruppen`(
+`ID` INT NOT NULL PRIMARY KEY,
+`name` VARCHAR(30) NOT NULL
+)ENGINE=InnoDB COLLATE utf8_general_ci;
+
+CREATE TABLE `prefix_raid_member`(
+`rID` INT NOT NULL,
+`cID` INT NOT NULL,
+UNIQUE(`rID`, `cID`) 
+)ENGINE=InnoDB COLLATE utf8_general_ci;
