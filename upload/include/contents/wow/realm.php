@@ -2,7 +2,7 @@
 defined ('main') or die ( 'no direct access' );
 if($menu->get(2) == NULL){
 $title = $allgAr['title'].' :: WOW Mod :: Realmlist';
-$hmenu  = '';
+$hmenu  = 'Realmliste';
 $design = new design ( $title , $hmenu, 1);
 $design->header();
 
@@ -16,16 +16,23 @@ foreach($slugs as $slug){
   $out = $realm->getAsArray();
   $out['status'] = (($out['status'])?'<span class="true">Online</span>':'<span class="false">Offline</span>');
   $out['queue'] = (($out['queue'])?'<span class="true">Vorhanden</span>':'<span class="false">Leer</span>');
+  $out['slug'] = urlencode($out['slug']);
     
   $tpl->set_ar_out($out,1);
 }
 $tpl->out(2);
 }else{
-$slug= $menu->get(2);
+$i = 2;
+$slug = '';
+while($menu->get($i) != NULL){
+$slug .= $menu->get($i).'-';
+$i++;
+}
+$slug = urldecode(mb_substr($slug,0,-1, 'UTF-8')); 
 $realm = new Realm($slug);
-
+if($realm->getLastError() == ''){
 $title = $allgAr['title'].' :: WOW Mod :: Details zu ' . $realm->getName();
-$hmenu  = '';
+$hmenu  = '<a href="?wow-realm">Realmliste</a> &raquo; ' . $realm->getName();
 $design = new design ( $title , $hmenu, 1);
 $design->header();
 
@@ -55,7 +62,13 @@ $tpl = new tpl ('wow/realm_details');
   }
   $tpl->out(4);
   }
- 
+}else{
+$title = $allgAr['title'].' :: WOW Mod :: Kein Realm gefunden';
+$hmenu  = '<a href="?wow-realm">Realmliste</a> &raquo; Fehler ';
+$design = new design ( $title , $hmenu, 1);
+$design->header();
+echo 'Kein Realm mit dem Slug \''.$realm->getSlug().'\' gefunden.';
+}
 }
 
 $design->footer();

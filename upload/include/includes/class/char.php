@@ -28,9 +28,9 @@ class Char extends Api{
   
   private $_mods = array();
   
-  public function __construct($name, $realm = NULL, $loadData=true, $mods = NONE){
+  public function __construct($name, $realm = NULL, $mods = NONE, $loadData=true){
     if($realm == NULL && is_numeric($name)){
-    $this->_cID = $name;
+      $this->_cID = $name;
     }else{     
       $this->_name = $name;
       $this->_realm = $realm;
@@ -39,7 +39,7 @@ class Char extends Api{
   }   
   
   // laed einen Char aus der DB 
-  protected function getDatasByDb($ignorTime = false){
+  protected function getDatasByDb($mods = NONE, $ignorTime = false){
     $sql ="SELECT
     `cID` , `name` , `level` , `realm` , `class`, `race`, `gender` , `achievementPoints` , `thumbnail` , UNIX_TIMESTAMP(`lastModified`) as  `lastModified`, UNIX_TIMESTAMP(`updated`) as `updated` 
     FROM `prefix_chars`
@@ -51,16 +51,19 @@ class Char extends Api{
       $this->_realm = $result['realm'];
       if(empty($result['level']) || empty($result['class']) || empty($result['race'])){
         return NULL;      
-      }else{
-        if($ignorTime || $result['updated'] > time() -60*60*24){           
-          $this->_level = $result['level'];           
-          $this->_class = $result['class'];         
-          $this->_race = $result['race'];          
-          $this->_gender = $result['gender'];           
-          $this->_achievementPoints = $result['achievementPoints'];
-          $this->_thumbnail = $result['thumbnail'];        
-          $this->_lastModified = $result['lastModified'];     
-          $this->_updated = $result['updated'];
+      }else{           
+        $this->_level = $result['level'];           
+        $this->_class = $result['class'];         
+        $this->_race = $result['race'];          
+        $this->_gender = $result['gender'];           
+        $this->_achievementPoints = $result['achievementPoints'];
+        $this->_thumbnail = $result['thumbnail'];        
+        $this->_lastModified = $result['lastModified'];     
+        $this->_updated = $result['updated'];
+        if($ignorTime || $result['updated'] > time() -($allgAr['wow_reload_time']*60)){
+          echo $result['updated'].'|'.(time() -($allgAr['wow_reload_time']*60));
+          //1312233418
+          //1312838662
           return true;
         }
       }
@@ -70,21 +73,8 @@ class Char extends Api{
   // laed einen Char aus dem WOW Arsenal
   protected function getDatasByapi($mods = NONE){
     if($this->_name == NULL || $this->_realm== NULL)  return false;
-    //! TODO Laden der gewuenschten Mods
-    if($mods > 0){
-    $options = '?fields=';
-    if(WITH_STATS & $mods) $options .= 'stats,';  
-    if(WITH_ITEMS & $mods)  $options .= 'items,'; 
-    if(WITH_APPEARANCE & $mods)  $options .= 'appearance,'; 
-    if(WITH_TALENTS & $mods)  $options .= 'talents,'; 
-    if(WITH_TITLES & $mods)  $options .= 'titles,'; 
-    if(WITH_PROFESSIONS & $mods)  $options .= 'professions,'; 
-    if(WITH_COMPANIONS & $mods)  $options .= 'companions,'; 
-    if(WITH_PROGRESSION & $mods)  $options .= 'progression,';
-    $options = substr($options,0,-1); // das letzte ',' abschneiden; stört zwar nicht, ist aber unschön
-    }else $options = ''; 
-     
-    $url = 'http://eu.battle.net/api/wow/character/'.$this->_realm.'/'. $this->_name . $options;
+    $lm = (empty($this->_lastModified)?0:$this->_lastModified);    
+    $url = 'http://eu.battle.net/api/wow/character/'.$this->_realm.'/'. $this->_name;
     $curl = new Curl();
 	  $curl->setURL($url);
 	  $tmp = json_decode($curl->getResult(), true);
@@ -103,8 +93,41 @@ class Char extends Api{
     $this->_lastModified = floor($tmp['lastModified'] / 1000); // Blizzard logt auf die Microsekunde Genau :)     
     $this->_updated = time();       
     $this->saveDatas();
+
+    if($mods && $lm < $this->_lastModified){
+    $options = '?fields=stats,items,appearance,talents,titles,professions,companions,progression';
+    $url = 'http://eu.battle.net/api/wow/character/'.$this->_realm.'/'. $this->_name . $options;
+    echo $url;
+    $curl->setURL($url);
+	  $tmp = json_decode($curl->getResult(), true);
+    if(isset($tmp['status']) && $tmp['status'] == 'nok'){
+      $this->_lastError = $tmp['reason'];
+      return false;
+    }
+    if(WITH_STATS & $mods){
+      $this->_mods[WITH_STATS] = new CharStats($this->_cID, $tmp['stats']);
+      $this->_mods[WITH_STATS]->saveDatas();       
+    }  
+    if(WITH_ITEMS & $mods){
+      $this->_mods[WITH_ITEMS] = new CharItems($this->_cID, $tmp['items']);
+      $this->_mods[WITH_ITEMS]->saveDatas();  
+    } 
+    if(WITH_APPEARANCE & $mods){
+    } 
+    if(WITH_TALENTS & $mods){
+    } 
+    if(WITH_TITLES & $mods){
+    } 
+    if(WITH_PROFESSIONS & $mods){
+    } 
+    if(WITH_COMPANIONS & $mods){
+    } 
+    if(WITH_PROGRESSION & $mods){
+    }	               
+    //! TODO Laden der gewuenschten Mods
     unset($curl);
     return true; 
+}
 }
   //!TODO Muss mal nochmal Ueberarbeitet werden
   public function getDatas($mods = NONE){ 

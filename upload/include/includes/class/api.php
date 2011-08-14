@@ -7,7 +7,9 @@ protected abstract function  getDatasByApi();
 public abstract function getDatas();
 public abstract function  saveDatas();
 public function getLastError(){
-  return $this->_lastError;
+  $error = $this->_lastError;
+  $this->_lastError = ''; 
+  return $error;
 }
 
 }
