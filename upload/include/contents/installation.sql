@@ -23,6 +23,7 @@ CREATE TABLE `prefix_chars`(
   `thumbnail`         varchar(255)      ,
   `lastModified`      TIMESTAMP         NOT NULL,
   `updated`           TIMESTAMP         NOT NULL,
+  `show`              BOOL              NOT NULL DEFAULT 1,
   UNIQUE(`name`, `realm`)
 )ENGINE=InnoDB COLLATE utf8_general_ci;
 
