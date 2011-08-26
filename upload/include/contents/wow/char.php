@@ -20,9 +20,10 @@ if($menu->get(2) != NULL){    //ein char ausgewählt
 }
 if($charList){
   $tpl = new tpl ('wow/charlist');
-  $sql = 'SELECT `cID` from `prefix_chars` WHERE `show` = 1';
+  $result = db_query('SELECT `cID` from `prefix_chars` WHERE `show` = 1');
   $tpl->out(0);
-  while(false){
+  while($row = mysql_fetch_array($result)){
+    $tpl->set_ar_out($row, 1);
   }
 
 $tpl->out(2);  
