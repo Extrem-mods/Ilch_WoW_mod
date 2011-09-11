@@ -9,10 +9,10 @@ class Realm extends Api{
   
   public function __construct($slug, $loadData=true){
     $this->_slug = $slug;
-    if($loadData) $this->getDatas(); 
+    if($loadData) $this->loadDatas(); 
   }
 
-  protected function getDatasByDb(){
+  protected function loadDatasByDb(){
     $result =  db_query("SELECT `name` , `type` , `queue` , `status` , `population` , UNIX_TIMESTAMP(`refresh`) as `time` FROM prefix_realms WHERE `slug` = '{$this->_slug}'");
     if($result = mysql_fetch_array($result)){
       if($result['time'] < time()-($allgAr['wow_reload_time']*60)) return false;
@@ -27,7 +27,7 @@ class Realm extends Api{
     }
   }
   
-  protected function getDatasbyApi(){
+  protected function loadDatasbyApi(){
     $url = 'http://eu.battle.net/api/wow/realm/status';
     $curl = new Curl();
 	  $curl->setURL($url. '?realms=' . $this->_slug);
@@ -64,8 +64,8 @@ class Realm extends Api{
     return false;
   }
   
-  public function getDatas(){
-    if(!$this->getDatasByDb()) return $this->getDatasbyApi();
+  public function loadDatas(){
+    if(!$this->loadDatasByDb()) return $this->loadDatasbyApi();
     return true; 
   }
   

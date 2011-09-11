@@ -35,11 +35,11 @@ class Char extends Api{
       $this->_name = $name;
       $this->_realm = $realm;
     }
-    if($loadData) $this->getDatas($mods);   
+    if($loadData) $this->loadDatas($mods);   
   }   
   
   // laed einen Char aus der DB 
-  protected function getDatasByDb($mods = NONE, $ignorTime = false){
+  protected function loadDatasByDb($mods = NONE, $ignorTime = false){
     $sql ="SELECT
     `cID` , `name` , `level` , `realm` , `class`, `race`, `gender` , `achievementPoints` , `thumbnail` , UNIX_TIMESTAMP(`lastModified`) as  `lastModified`, UNIX_TIMESTAMP(`updated`) as `updated` 
     FROM `prefix_chars`
@@ -68,7 +68,7 @@ class Char extends Api{
     return false;
   }
   // laed einen Char aus dem WOW Arsenal
-  protected function getDatasByapi($mods = NONE){
+  protected function loadDatasByapi($mods = NONE){
     if($this->_name == NULL || $this->_realm== NULL)  return false;
     $lm = (empty($this->_lastModified)?0:$this->_lastModified);    
     $url = 'http://eu.battle.net/api/wow/character/'.$this->_realm.'/'. $this->_name;
@@ -127,9 +127,9 @@ class Char extends Api{
 }
 }
   //!TODO Muss mal nochmal Ueberarbeitet werden
-  public function getDatas($mods = NONE){ 
-    if($this->getDatasByDb($mods) == true) return true;
-    return $this->getDatasbyApi($mods);
+  public function loadDatas($mods = NONE){ 
+    if($this->loadDatasByDb($mods) == true) return true;
+    return $this->loadDatasbyApi($mods);
   }
   
   public function saveDatas(){
@@ -157,6 +157,9 @@ class Char extends Api{
   'thumbnail' => $this->_thumbnail,        
   'lastModified' => $this->_lastModified,     
   'update' => $this->_updated);
+  foreach($this->_mods as $k=>$v){
+  	$tmp[$k]=$v->getAsArray();
+  }
   return $tmp;  
   }
   

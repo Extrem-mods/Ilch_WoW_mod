@@ -13,14 +13,14 @@ private $_reforge;
     $this->_eiID= $id;
     getDatas();
   }
-  protected function getDatasbyDb(){
+  protected function loadDatasbyDb(){
   }
-  protected function getDatasbyApi(){
+  protected function loadDatasbyApi(){
     return getDatasbyDb();  // eventuell an dieser stelle ncohmal ne Spezielle Funktion
                             //moechte aber vermeiden das zu viele Queries hintereinander an die API gehen
                             //daher die Itemtools immer zusammen mit dem Char neu Laden. 
   }
-  public function getDatas(){
+  public function loadDatas(){
     return getDatasbyDb();
   
   }

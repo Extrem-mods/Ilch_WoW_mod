@@ -9,7 +9,6 @@ $design->header();
 $tpl = new tpl ('wow/realmlist');
 $tpl->out(0);
 $realms = new Realmlist();
-$realms->getDatas();
 $slugs = $realms->getSlugs();
 foreach($slugs as $slug){
   $realm = $realms->getRealm($slug);

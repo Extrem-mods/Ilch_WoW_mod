@@ -11,10 +11,10 @@ class Item extends Api{
   public function __construct($id){
     $this->_LOCAL_ICON_PATH = dirname($_SERVER['PHP_SELF']). 'include/images/wow_mod/items/';
     $this->_id = $id;
-    $this->getDatas();
+    $this->loadDatas();
   }
   
-  protected function getDatasbyDb(){
+  protected function loadDatasbyDb(){
   $sql = "SELECT `name`, `icon`, `quality` FROM `prefix_items` WHERE `iID` = {$this->_id}";
   $result =  db_query($sql);
     if($result = mysql_fetch_array($result)){                   
@@ -26,14 +26,14 @@ class Item extends Api{
     return false;    
   }
   
-  public function getDatas(){
-    if(!$this->getDatasByDb()){
-        return $this->getDatasbyApi();  
+  public function loadDatas(){
+    if(!$this->loadDatasByDb()){
+        return $this->loadDatasbyApi();  
       }
     return true; 
   }
   
-  protected function getDatasbyApi(){
+  protected function loadDatasbyApi(){
     $url = 'http://eu.battle.net/api/wow/data/item/';
     $curl = new Curl();
 	  $curl->setURL($url.$this->_id);

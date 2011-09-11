@@ -3,8 +3,11 @@
 class RealmList extends Api{
   private $_list = array();
  
-  public function getDatas(){
-    $realms = $this->getDatasbyAPI();
+  public function __construct($load = true){
+  	if($load) $this->loadDatas();  	
+  }
+  public function loadDatas(){
+    $realms = $this->loadDatasbyAPI();
     foreach($realms as $realm){
       if(!isset($this->_list[$realm['slug']])){
         $this->_list[$realm['slug']] = new Realm($realm['slug'], false);
@@ -14,7 +17,7 @@ class RealmList extends Api{
     }
   }
   
-  protected function getDatasByApi(){
+  protected function loadDatasByApi(){
     $url = 'http://eu.battle.net/api/wow/realm/status';
     $curl = new Curl();
 	  $curl->setURL($url);
@@ -22,8 +25,8 @@ class RealmList extends Api{
 	  unset($curl);
     return $tmp['realms'];
   }
-protected function getDatasByDb(){
-  return getDatasByApi();
+protected function loadDatasByDb(){
+  return loadDatasByApi();
 }
 
   public function getRealm($slug){
@@ -42,5 +45,8 @@ protected function getDatasByDb(){
     }
     if(!$asList) $tmp = explode(':', substr($tmp,0,-1));
     return $tmp; 
+  }
+  public function getAsArray(){
+  	return $this->_list;
   }
 }

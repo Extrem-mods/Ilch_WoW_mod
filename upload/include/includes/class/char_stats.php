@@ -8,14 +8,14 @@ class CharStats extends Api{
   public function __construct($cid, $daten = NULL){
     $_stats['cID'] = $cid;
     if(!empty($daten) && is_array($daten)){
-      getDatasByapi($cid);
+      loadDatasByapi($cid);
       saveDatas();
     }else{
-      getDatas();
+      loadDatas();
     }
   }
   
-  protected function getDatasByDb(){
+  protected function loadDatasByDb(){
     $sql =  "SELECT * FROM `prefix_char_stats` WHERE `cID` = {$this->_stats['cID']}";
     $result = db_query($sql);
     if($result = mysql_fetch_assoc($result)){
@@ -25,11 +25,11 @@ class CharStats extends Api{
   /**Daten werden der Funktion uebergeben, nur im Notfall besteht die moeglchkeit sei aus der API zu holen
    *
    */     
-  protected function getDatasByapi($daten, $api = FALSE){
+  protected function loadDatasByapi($daten, $api = FALSE){
     
   }
   
-  public function getDatas(){
+  public function loadDatas(){
     return getDatasByDb();
   }
   
