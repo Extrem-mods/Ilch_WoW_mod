@@ -61,9 +61,6 @@ class Char extends Api{
         $this->_lastModified = $result['lastModified'];     
         $this->_updated = $result['updated'];
         if($ignorTime || $result['updated'] > time() -($allgAr['wow_reload_time']*60)){
-          echo $result['updated'].'|'.(time() -($allgAr['wow_reload_time']*60));
-          //1312233418
-          //1312838662
           return true;
         }
       }

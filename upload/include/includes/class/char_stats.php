@@ -5,7 +5,7 @@ defined ('main') or die ( 'no direct access' );
 class CharStats extends Api{
   private $_stats = array();
   
-  public __construct($cid, $daten = NULL){
+  public function __construct($cid, $daten = NULL){
     $_stats['cID'] = $cid;
     if(!empty($daten) && is_array($daten)){
       getDatasByapi($cid);
@@ -15,7 +15,7 @@ class CharStats extends Api{
     }
   }
   
-  protected function  getDatasByDb(){
+  protected function getDatasByDb(){
     $sql =  "SELECT * FROM `prefix_char_stats` WHERE `cID` = {$this->_stats['cID']}";
     $result = db_query($sql);
     if($result = mysql_fetch_assoc($result)){
