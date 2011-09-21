@@ -8,7 +8,7 @@ class CharStats extends Api{
   public function __construct($cid, $daten = NULL){
     $_stats['cID'] = $cid;
     if(!empty($daten) && is_array($daten)){
-      loadDatasByapi($cid);
+      loadDatasByapi($daten);
       saveDatas();
     }else{
       loadDatas();
@@ -26,6 +26,7 @@ class CharStats extends Api{
    *
    */     
   protected function loadDatasByapi($daten, $api = FALSE){
+  	
     
   }
   
@@ -34,5 +35,6 @@ class CharStats extends Api{
   }
   
   public function saveDatas(){
+  	
   }
 }
