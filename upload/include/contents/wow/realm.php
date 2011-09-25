@@ -4,6 +4,8 @@ if($menu->get(2) == NULL){
 $title = $allgAr['title'].' :: WOW Mod :: Realmlist';
 $hmenu  = 'Realmliste';
 $design = new design ( $title , $hmenu, 1);
+$design->addheader('<script type="text/javascript" src="include/includes/js/jquery.js"></script>');
+$design->addheader('<script type="text/javascript" src="include/includes/js/jquery.tablesorter.js"></script>');
 $design->header();
 
 $tpl = new tpl ('wow/realmlist');
