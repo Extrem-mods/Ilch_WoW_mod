@@ -10,12 +10,11 @@ require_once('include/includes/class/design.php');
 require_once('include/includes/class/menu.php');
 require_once('include/includes/class/curl.php');
 require_once('include/includes/class/api.php');
-require_once('include/includes/class/char.php');
 require_once('include/includes/class/realmlist.php');
 require_once('include/includes/class/realm.php');
-require_once('include/includes/class/item.php');
-require_once('include/includes/class/item_tool.php');
-require_once('include/includes/class/char_items.php');
+require_once('include/includes/class/char.php');
+require_once('include/includes/class/char_stats.php');
+
 
 
 
