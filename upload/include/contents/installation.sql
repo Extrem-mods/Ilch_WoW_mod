@@ -1,4 +1,4 @@
-INSERT INTO `prefix_config` (`schl`, `typ`, `kat`, `frage`, `wert`, `pos`) VALUES ('wow_char_auto_rec', 'grecht', 'ilch WoW Mod', 'Ab welchem Rang sollen Chars automatich verfolgt werden?', '-5', '0');
+﻿INSERT INTO `prefix_config` (`schl`, `typ`, `kat`, `frage`, `wert`, `pos`) VALUES ('wow_char_auto_rec', 'grecht', 'ilch WoW Mod', 'Ab welchem Rang sollen Chars automatich verfolgt werden?', '-5', '0');
 INSERT INTO `prefix_config` (`schl`, `typ`, `kat`, `frage`, `wert`, `pos`) VALUES ('wow_reload_time', 'input', 'ilch WoW Mod', 'Wielange [min] soll der Mod warten bevor er die Daten aus der DB als veraltet ansieht?', '1440', '0');
 
 CREATE TABLE `prefix_realms` (
@@ -23,6 +23,7 @@ CREATE TABLE `prefix_chars`(
   `thumbnail`         varchar(255)      ,
   `lastModified`      TIMESTAMP         NOT NULL,
   `updated`           TIMESTAMP         NOT NULL,
+  `show`              BOOL              NOT NULL DEFAULT 1,
   UNIQUE(`name`, `realm`)
 )ENGINE=InnoDB COLLATE utf8_general_ci;
 
@@ -167,7 +168,7 @@ UNIQUE(`cID`, `tID`)
 CREATE TABLE `prefix_char_stats`(
 `cID`               INT                             NOT NULL  PRIMARY KEY,
 `health`            INT                             NOT NULL,
-`powerENGINE`         enum('mana','energie', 'rage')  NOT NULL,
+`powerType`         enum('mana','energie', 'rage')  NOT NULL,
 `power`             INT                             NOT NULL,
 `str`               INT                             NOT NULL,
 `agi`               INT                             NOT NULL,

@@ -1,0 +1,31 @@
+
+<table id="charList">
+<thead>
+<tr>
+<th>Name</th>
+<th>Realm</th>
+<th>Level</th>
+<th>Klasse</th>
+<th>Rasse</th>
+</tr>
+</thead>
+<tbody>
+{EXPLODE} 
+<tr>
+<td>{name}</td>
+<td>{realm}</td>
+<td>{level}</td>
+<td>{class}</td>
+<td>{race}</td>
+</tr>
+{EXPLODE} 
+</tbody>
+</table>
+<script>
+$("#charList").tableSorter({
+		sortColumn: 0,			// Integer or String of the name of the column to sort by.
+		sortClassAsc: 'sortUp',		// Class name for ascending sorting action to header
+		sortClassDesc: 'sortDown',	// Class name for descending sorting action to header
+		highlightClass: 'highlight' 		// class name for sort column highlighting.
+	});
+</script>
