@@ -1,5 +1,44 @@
-﻿INSERT INTO `prefix_config` (`schl`, `typ`, `kat`, `frage`, `wert`, `pos`) VALUES ('wow_char_auto_rec', 'grecht', 'ilch WoW Mod', 'Ab welchem Rang sollen Chars automatich verfolgt werden?', '-5', '0');
-INSERT INTO `prefix_config` (`schl`, `typ`, `kat`, `frage`, `wert`, `pos`) VALUES ('wow_reload_time', 'input', 'ilch WoW Mod', 'Wielange [min] soll der Mod warten bevor er die Daten aus der DB als veraltet ansieht?', '1440', '0');
+﻿INSERT INTO `prefix_config` (`schl`, `typ`, `kat`, `frage`, `wert`, `pos`) 
+VALUES
+('wow_char_auto_rec', 'grecht', 'ilch WoW Mod', 'Ab welchem Rang sollen Chars automatich verfolgt werden?', '-5', '0'),
+('wow_reload_time', 'input', 'ilch WoW Mod', 'Wielange [min] soll der Mod warten bevor er die Daten aus der DB als veraltet ansieht?', '1440', '0'),
+('wow_locale', 's', 'ilch WoW Mod', 'Von welchem Server und in welcher Sprache, sollen die Daten geladen werden?', '7', '0');
+
+CREATE TABLE `prefix_wow_regions` (
+`id`		TINYINT UNSIGNED	NOT NULL	PRIMARY KEY	,
+`server`	varchar(25)			NOT NULL				,
+)ENGINE=InnoDB COLLATE utf8_general_ci;
+
+INSERT INTO `prefix_wow_regions`
+(`id`, `server`)
+VALUES
+ (1, 'us.battle.net'),
+ (2, 'eu.battle.net'),
+ (3, 'kr.battle.net'),
+ (4, 'tw.battle.net'),
+ (5, 'battlenet.com.cn')
+;
+CREATE TABLE `prefix_wow_locale` (
+	`id`	TINYINT 		UNSIGNED	NOT NULL	PRIMARY KEY,
+	`rid` 	TINYINT 		UNSIGNED	NOT NULL,
+	`short`	varchar(5)					NOT NULL
+)ENGINE=InnoDB COLLATE utf8_general_ci;
+
+INSERT INTO `prefix_wow_locale`
+(`id`, `rid`, `short`)
+VALUES
+ (1, 1, 'en_US'),
+ (2, 1, 'es_MX'),
+ (3, 2, 'en_GB'),
+ (4, 2, 'es_ES'),
+ (5, 2, 'fr_FR'),
+ (6, 2, 'ru_RU'),
+ (7, 2, 'de_DE'),
+ (8, 3, 'ko_KR'),
+ (9, 4, 'zh_TW'),
+ (10, 5, 'zh_CN')
+;
+
 
 CREATE TABLE `prefix_realms` (
   `slug`        varchar(15)                   NOT NULL  PRIMARY KEY,
@@ -43,10 +82,14 @@ PRIMARY KEY  (`gID`)
 )ENGINE=InnoDB COLLATE utf8_general_ci;
 
 CREATE TABLE `prefix_items`(
-`iID`     int               NOT NULL,
-`name`    varchar(50)       NOT NULL,
-`icon`    varchar(255)      NOT NULL,
-`quality` TINYINT UNSIGNED  NULL,
+`iID`						int               	NOT NULL,
+`name`    			varchar(50)       	NOT NULL,
+`description`		varchar(255)				NOT NULL
+`icon`    			varchar(255)   		  NOT NULL,
+`itemClass` 		TINYINT 	UNSIGNED 	NOT NULL,
+`itemSubClass` 	TINYINT 	UNSIGNED 	NOT NULL,
+`itemLevel`			SMALLINT	UNSIGNED 	NOT NULL,
+`quality` 			TINYINT 	UNSIGNED  NULL,
 PRIMARY KEY  (`iID`)
 )ENGINE=InnoDB COLLATE utf8_general_ci;
 

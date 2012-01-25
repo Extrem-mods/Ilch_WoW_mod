@@ -18,9 +18,9 @@ class RealmList extends Api{
   }
   
   protected function loadDatasByApi(){
-    $url = 'http://eu.battle.net/api/wow/realm/status';
+    $url = 'http://'.Api::getServer().'/api/wow/realm/status';
     $curl = new Curl();
-	  $curl->setURL($url);
+	  $curl->setURL($url.'?locale='.Api::getLocale());
 	  $tmp = json_decode($curl->getResult(), true);
 	  unset($curl);
     return $tmp['realms'];

@@ -29,9 +29,9 @@ class Realm extends Api{
 
 	protected function loadDatasbyApi($daten = NULL){
 	if($daten == NULL){
-    $url = 'http://eu.battle.net/api/wow/realm/status';
+    $url = 'http://'.Api::getServer().'/api/wow/realm/status';
     $curl = new Curl();
-	$curl->setURL($url. '?realms=' . $this->_slug);
+	$curl->setURL($url. '?realms=' . $this->_slug.'&locale='.Api::getLocale());
 	$tmp = json_decode($curl->getResult(), true);
     if(isset($tmp['realms'][1])){ $this->_lastError='Realm nicht gefunden'; return false;}
     $this->_type = $tmp["realms"][0]['type'];

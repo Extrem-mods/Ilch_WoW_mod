@@ -14,6 +14,7 @@ require_once('include/includes/class/realmlist.php');
 require_once('include/includes/class/realm.php');
 require_once('include/includes/class/char.php');
 require_once('include/includes/class/char_stats.php');
+require_once('include/includes/class/item.php');
 
 
 
