@@ -10,6 +10,7 @@ if($menu->get(2) != NULL){    //ein char ausgewählt
 	}
 	
 	$out = $char->getAsArray();
+	
 	foreach($out as $k=>$v){
 		if(is_array($v)){
 			foreach($v as $k2=>$v2){
@@ -44,10 +45,21 @@ if($menu->get(2) != NULL){    //ein char ausgewählt
 		$out['hitSpeed'] = round($out["stats.mainHandSpeed"],2);
 		$out['expertise'] = $out["stats.mainHandExpertise"];
 	}
+	if($out['stats.rangedDmgMin'] >0){
+	$out['rdmg'] = $out['stats.rangedDmgMin'].'-'.$out['stats.rangedDmgMax'];
+	$out['rdps'] = round($out['stats.rangedDps'],1);
+	$out['stats.rangedSpeed']= round($out['stats.rangedSpeed'],2);
+	
+	}else{
+	$out['rdmg'] = '--';
+	$out['rdps'] = '--';
+	$out['stats.rangedSpeed'] = '--';
+	
+	}
 	
 	var_dump($out);	
 	$tpl->set_ar_out($out,0);  
-  
+	$design->footer();  
 }
 
-$design->footer();
+
