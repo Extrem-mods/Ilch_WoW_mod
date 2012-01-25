@@ -103,7 +103,7 @@ function admin_allg_wow_locale ( $ak ) {
 			$i--;
 			continue;
 		}
-		$wow_locale.="<option value=\"{$locales[$i]['id']}\">{$locales[$i]['short']}</option>\n";
+		$wow_locale.="<option ".($locales[$i]['id'] == $ak?'selected="selected"':'')."value=\"{$locales[$i]['id']}\">{$locales[$i]['short']}</option>\n";
 	}
 	$wow_locale.="</optgroup>\n";
   return ( $swow_locale );

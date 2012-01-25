@@ -88,9 +88,9 @@ class	Char	extends	Api{
 	protected	function loadDatasByapi($mods = NONE){
 		if($this->_name	==	NULL	||	$this->_realm==	NULL)	$this->loadCharName();
 		$lm	=	(empty($this->_lastModified)?0:$this->_lastModified);
-		$url	=	'http://eu.battle.net/api/wow/character/'.$this->_realm.'/'.	$this->_name;
+		$url	=	'http://'.Api::getServer().'/api/wow/character/'.$this->_realm.'/'.	$this->_name;
 		$curl	=	new	Curl();
-		$curl->setURL($url);
+		$curl->setURL($url.'?locale='.Api::getLocale());
 		$tmp	=	json_decode($curl->getResult(),	true);
 		if(isset($tmp['status'])	&&	$tmp['status']	==	'nok'){
 			$this->_lastError	=	$tmp['reason'];
