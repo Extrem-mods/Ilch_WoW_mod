@@ -165,7 +165,9 @@ class	Char	extends	Api{
 	'lastModified'	=>	$this->_lastModified,
 	'update'	=>	$this->_updated);
 	foreach($this->_mods	as	$k=>$v){
-		$tmp[$k]=$v->getAsArray();
+		$name = '';
+		if($k & WITH_STATS) $name='stats';
+		$tmp[$name]=$v->getAsArray();
 	}
 	return	$tmp;
 	}
