@@ -4,9 +4,9 @@ if(is_numeric($menu->get(2))){
 $iid = $menu->get(2);
 }
 else{
-$iid = mt_rand();
+$iid = 77188;
 }
-$title = $allgAr['title'].' :: WOW Mod :: Item ('.$iid.')';
+$title = $allgAr['title'].' :: WOW Mod :: Test der Item Klasse ';
 $hmenu  = 'Itemliste';
 $design = new design ( $title , $hmenu, 1);
 $design->header();

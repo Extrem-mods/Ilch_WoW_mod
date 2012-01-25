@@ -34,10 +34,9 @@ class Item extends Api{
   }
   
   protected function loadDatasbyApi(){
-    $url = 'http://eu.battle.net/api/wow/data/item/';
+    $url = 'http://eu.battle.net/api/wow/item/';
     $curl = new Curl();
 	  $curl->setURL($url.$this->_id);
-	  echo $url.$this->_id;
 	  $tmp = json_decode($curl->getResult(), true);    
     unset($curl);
     if(empty($tmp) || (isset($tmp['status']) && $tmp['status'] == 'nok')){
