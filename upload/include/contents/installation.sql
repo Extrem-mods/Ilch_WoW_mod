@@ -6,7 +6,7 @@ VALUES
 
 CREATE TABLE `prefix_wow_regions` (
 `id`		TINYINT UNSIGNED	NOT NULL	PRIMARY KEY	,
-`server`	varchar(25)			NOT NULL				,
+`server`	varchar(25)			NOT NULL
 )ENGINE=InnoDB COLLATE utf8_general_ci;
 
 INSERT INTO `prefix_wow_regions`

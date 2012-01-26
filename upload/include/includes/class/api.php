@@ -16,7 +16,8 @@ public function getLastError(){
   return $error;
 }
 public static function getServer(){
-	if(!empty(self::$_server))	return self::$_server
+	global $allgAr;
+	if(!empty(self::$_server))	return self::$_server;
 	$result = db_query('select `prefix_wow_regions`.`server`
 	from `prefix_wow_regions`
 	INNER JOIN `prefix_wow_locale` ON (`prefix_wow_regions`.`id` = `prefix_wow_locale`.`rid`)
@@ -24,15 +25,17 @@ public static function getServer(){
 	if($row = mysql_fetch_row($result)){
 		self::$_server = $row[0];
 		return $row[0];
-		
-	throw new Exception('Der Server konnte nicht bestimmt werden, bitte Überprüfe die Einstellung im Adminmenü');
+	}
+	throw new Exception('Der Server konnte nicht bestimmt werden, bitte ÃœberprÃ¼fe die Einstellung im AdminmenÃ¼');
 }
 public static function getLocale(){
-	if(!empty(self::$_locale))	return self::$_locale
+	global $allgAr;
+	if(!empty(self::$_locale))	return self::$_locale;
 	$result = db_query('select `prefix_wow_locale`.`short` from `prefix_wow_locale` WHERE `id` = '.$allgAr['wow_locale']);
 	if($row = mysql_fetch_row($result)){
-		self::$_locale = $row[0]
+		self::$_locale = $row[0];
 		return $row[0];
 	}
-	throw new Exception('Die Lacale Einstellung konnte nicht erfolgreich geladen werden. Bitte Überprüfe die EInstellung im Adminmenü');
+	throw new Exception('Die Lacale Einstellung konnte nicht erfolgreich geladen werden. Bitte ÃœberprÃ¼fe die EInstellung im AdminmenÃ¼');
+	}
 }
