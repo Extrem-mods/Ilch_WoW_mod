@@ -16,24 +16,24 @@ class DKP{
 		$this->_saldo = 0;
 		$this->_history = array();
 		$history = db_query('select `time`, `dscription`, `change` FROM `prefix_dkp_his` WHERE char='.$this->_cid);
-		while($row = mysql_fetch_assoc($history){
+		while($row = mysql_fetch_assoc($history)){
 			$this->_history[] = $row;
 			$this->_saldo = $this->_saldo + $row['change'];
 		}
 	}
-	
+	/*
 	public static function getHistory($cid){
 		if(!mysql_num_rows(db_query('select `cID` FROM `prefix_chars` WHERE `cID` = '.$cid)))
 			throw Exeption('Char ist nicht in der Datenbank vorhanden');
 		$history = db_query('select `time`, `dscription`, `change` FROM `prefix_dkp_his` WHERE char='.$cid);
 		$end = array();
-		while($row = mysql_fetch_assoc($history){
+		while($row = mysql_fetch_assoc($history)){
 			$end = $row;
 		}
 		return $end;
 	
 	}
-	
+	*/
 	public function getHistory(){
 		return $this->_history;
 	}
@@ -47,7 +47,7 @@ class DKP{
 	
 	}
 	
-	public function useRule($id, $description==''){
+	public function useRule($id, $description=''){
 		$tmp = db_query('select `changes` FROM `prefix_dkp_rules` WHERE `id`='.$id);
 		if(mysql_num_rows($tmp) != 1)	return false;
 		$value = mysql_fetch_array($value);	$value = $value['changes'];

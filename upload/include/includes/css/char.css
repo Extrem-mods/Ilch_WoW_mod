@@ -83,3 +83,16 @@ div.stats  span var{
 	position:absolute;
 	right:0;
 }
+ul.klasslist{
+	list-style:none inside;
+}
+
+ul.klasslist li{
+	float:left;
+}
+ul.charlist{
+	list-style:none inside;
+}
+ul.charlist ul ul li{
+	float:left;
+}

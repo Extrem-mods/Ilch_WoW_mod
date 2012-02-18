@@ -1,16 +1,11 @@
 ﻿<?php
 defined ('main') or die ( 'no direct access' );
-if($menu->get(2) != NULL){    //ein char ausgewählt
-	if(is_numeric($menu->get(2))){ //cID gegegben
-		$char = new Char($menu->get(2), NULL, WITH_STATS);
-		echo $char->getLastError(); 
-	}elseif($menu->get(3) != NULL){   //realm/name gegeben
-		$char = new Char($menu->get(3), $menu->get(2), WITH_STATS);
-		echo $char->getLastError();
-	}
-	
+
+switch($menu->get(2)){
+case 'show':
+$char = new Char(intval($menu->get(3)), NULL, WITH_STATS);
 	$out = $char->getAsArray();
-	
+
 	foreach($out as $k=>$v){
 		if(is_array($v)){
 			foreach($v as $k2=>$v2){
@@ -54,12 +49,48 @@ if($menu->get(2) != NULL){    //ein char ausgewählt
 	$out['rdmg'] = '--';
 	$out['rdps'] = '--';
 	$out['stats.rangedSpeed'] = '--';
-	
 	}
 	
 	var_dump($out);	
 	$tpl->set_ar_out($out,0);  
+	$design->footer();
+break;
+default:
+// Charliste erstellen
+	$title = $allgAr['title'].' :: WOW Mod :: Chars';
+	$hmenu  = 'Charaktere';
+	$design = new design ( $title , $hmenu);
+	$design->addheader('<link rel="stylesheet" type="text/css" href="include/includes/css/char.css">');
+	$design->header();
+	$tpl = new tpl ('wow/charlist');
+	$classes = getClassIds();
+	$tpl->out(0);
+	foreach($classes as $k=> $v){
+		$tpl->set_ar_out(array('k_id' => $k, 'k_name' => $v), 1);
+	}
+	$tpl->out(2);
+	if(is_numeric($menu->get(2)) && isset($classes[$menu->get(2)])){
+		$k = $menu->get(2);
+		$v = $classes[$menu->get(2)];
+		$tpl->set_ar_out(array('klassid' => $k, 'klassname' => $v), 3);
+		$chars = db_query('SELECT `cID`, `name`, `level`, `class`, `race`, `account` FROM `ic1_chars` WHERE `class` ='. $k);
+		while($row = mysql_fetch_array($chars)){
+			$row['r_name'] = getRaceByID($row['race']);
+			$tpl->set_ar_out($row, 4);
+		}
+		$tpl->out(5);
+	}
+	else{
+		foreach($classes as $k=> $v){
+			$tpl->set_ar_out(array('klassid' => $k, 'klassname' => $v), 3);
+			$chars = db_query('SELECT `cID`, `name`, `level`, `class`, `race`, `account` FROM `ic1_chars` WHERE `class` ='. $k);
+			while($row = mysql_fetch_array($chars)){
+				$row['r_name'] = getRaceByID($row['race']);
+				$tpl->set_ar_out($row, 4);
+			}
+			$tpl->out(5);
+		}
+	}
+	$tpl->out(6);
 	$design->footer();  
 }
-
-

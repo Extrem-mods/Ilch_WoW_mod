@@ -1,6 +1,6 @@
 <?php
-function getRaceByID($raceID){
-  $ID = array(
+function getRaceIds(){
+$ID = array(
   1   =>  'Mensch',
   2   =>  'Ork',
   3   =>  'Zwerg',
@@ -10,15 +10,19 @@ function getRaceByID($raceID){
   7   =>  'Gnom',
   8   =>  'Troll',
   9   =>  'Goblin',
-  10  => 	'Blutelf',
-  11 	=>  'Draenei',
+  10  =>  'Blutelf',
+  11  =>  'Draenei',
   22  =>  'Worgen'
   );
+  return $ID;
+}
+
+function getRaceByID($raceID){
+  $ID =  getRaceIds();
   return $ID[$raceID]; 
 } 
-
-function getClassByID($classID){		
-	$ID = array(
+function getClassIds(){
+$ID = array(
 	1 => 'Krieger',
 	2 => 'Paladin',
 	3 => 'Jäger',
@@ -30,6 +34,11 @@ function getClassByID($classID){
 	9 => 'Hexenmeister',
 	11 =>'Druide'
 	);
+	return $ID;
+}
+
+function getClassByID($classID){		
+	$ID =  getClassIds();
 	return $ID[$classID];
 }
 
