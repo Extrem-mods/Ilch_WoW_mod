@@ -52,6 +52,8 @@ CREATE TABLE `prefix_realms` (
 
 CREATE TABLE `prefix_chars`(
   `cID`               INT               NOT NULL  AUTO_INCREMENT  PRIMARY KEY,
+  `acc_id`			  INT				NOT NULL	DEFAULT 0,
+  `guild_id`		  INT				,
   `name`              varchar(25)       NOT NULL,
   `level`             TINYINT UNSIGNED  ,
   `realm`             varchar(25)       NOT NULL,
@@ -329,3 +331,24 @@ CREATE TABLE `prefix_raid_member`(
 `cID` INT NOT NULL,
 UNIQUE(`rID`, `cID`) 
 )ENGINE=InnoDB COLLATE utf8_general_ci;
+
+-- -----------------------------------------------------
+-- Table `prefix_dkp_his`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `prefix_dkp_his` (
+  `char` INT NOT NULL ,
+  `time` TIMESTAMP NOT NULL ,
+  `dscription` TEXT NOT NULL ,
+  `change` INT NOT NULL DEFAULT 0 )
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `prefix_dkp_rules`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `prefix_dkp_rules` (
+  `id` INT NOT NULL ,
+  `description` TEXT NOT NULL ,
+  `changes` INT NOT NULL DEFAULT 0 ,
+  PRIMARY KEY (`id`) )
+ENGINE = InnoDB;

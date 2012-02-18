@@ -12,7 +12,6 @@ define('WITH_PROFESSIONS',	32);
 define('WITH_COMPANIONS',	64);
 define('WITH_PROGRESSION',	128);
 
-
 class	Char	extends	Api{
 	private	$_cID;
 	private	$_name;
