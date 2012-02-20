@@ -2,6 +2,8 @@
 VALUES
 ('wow_char_auto_rec', 'grecht', 'ilch WoW Mod', 'Ab welchem Rang sollen Chars automatich verfolgt werden?', '-5', '0'),
 ('wow_reload_time', 'input', 'ilch WoW Mod', 'Wielange [min] soll der Mod warten bevor er die Daten aus der DB als veraltet ansieht?', '1440', '0'),
+('wow_new_char', 'grecht', 'ilch WoW Mod', 'Ab welchem Rang dürfen neuen Chars angelegt werden?', '-9', '0'),
+('wow_del_char', 'grecht', 'ilch WoW Mod', 'Ab welchem Rang dürfen fremde Chars gelöscht werden?', '-9', '0'),
 ('wow_locale', 's', 'ilch WoW Mod', 'Von welchem Server und in welcher Sprache, sollen die Daten geladen werden?', '7', '0');
 
 CREATE TABLE `prefix_wow_regions` (
@@ -62,8 +64,8 @@ CREATE TABLE `prefix_chars`(
   `gender`            BOOL              ,
   `achievementPoints` INT               ,
   `thumbnail`         varchar(255)      ,
-  `lastModified`      TIMESTAMP         NOT NULL,
-  `updated`           TIMESTAMP         NOT NULL,
+  `lastModified`      TIMESTAMP         NOT NULL DEFAULT 0,
+  `updated`           TIMESTAMP         NOT NULL DEFAULT 0,
   `show`              BOOL              NOT NULL DEFAULT 1,
   UNIQUE(`name`, `realm`)
 )ENGINE=InnoDB COLLATE utf8_general_ci;

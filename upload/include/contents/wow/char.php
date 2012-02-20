@@ -2,6 +2,67 @@
 defined ('main') or die ( 'no direct access' );
 
 switch($menu->get(2)){
+case 'new':
+	global $allgAr;
+	if(!has_right($allgAr['wow_new_char'])){
+			wd ('?wow-chars', 'Sie haben nicht die benötigten Rechte, einen neuen Char anzulegen.' 5); 
+			exit();
+	}
+	$title = $allgAr['title'].' :: WOW Mod :: New Chars';
+	$hmenu  = 'Charaktere >> neu';
+	$design = new design ( $title , $hmenu);
+	$design->addheader('<link rel="stylesheet" type="text/css" href="include/includes/css/char.css">');
+	$design->header();
+	$tpl = new tpl ('wow/new_char');
+	if(empty($_POST['new_char_realm']) || empty($_POST['new_char_name'])){
+		$tpl->set_ar_out(
+		 array(
+		  'msg' => '',
+		  'REALM'=>(empty($_POST['new_char_realm'])?'':$_POST['new_char_realm']),
+		  'NAME'=>(empty($_POST['new_char_name'])?'':$_POST['new_char_name'])
+		 ), 0);
+	}else{
+		try{
+			$char = Char::newChar(escape($_POST['new_char_realm'], 'string'), escape($_POST['new_char_name'], 'string'), $_SESSION['authid']);
+		}catch(Exception $e){
+			$tpl->set_ar_out(
+			 array(
+			  'msg'=>escape($e->getMessage(), 'string'),
+			  'REALM'=>$_POST['new_char_realm'],
+			  'NAME'=>$_POST['new_char_name']
+			 ), 0);
+			 $design->footer();
+			 exit();
+		}
+		wd ('?wow-chars-'.$char->getCID(), 'Der Char "'.$char->getName().'" vom Realm "'.$char->getRealm().'" wurde erfolgreich angelegt',  5); 
+		exit();		
+	}
+break;
+case 'del':
+	if(!is_numeric($menu->get(3))){
+		wd ('?wow-chars', 'Kein char zum löchen Ausgewählt' 5); 
+		exit();
+	}
+	try{
+		$char = New Char($menu->get(3));
+	}catch(Exception $e)(
+		wd ('?wow-chars',$e->getMessage(),  5); 
+		exit();		
+	}
+	if(!($_SESSION['authid'] == $char->getAcc() || has_right($allgAr['wow_del_char']))){
+		wd ('?wow-chars', 'Sie haben keine Berechtigung, diesen Char zu löschen' 5); 
+		exit();
+	}
+	$id = $char->getCID();
+	unset($char);
+	if(db_query("DELETE FROM `prefix_chars` WHERE WHERE `cID` = '{$id}'")){
+		wd ('?wow-chars', 'Der Ausgewählte Char wurde erfolgreich aus der TAbelle entfernt' 5);  // !!Achtung!! Funktioniert nur bei InnoDB-TAbellen mit Fremdschlüsseln (Install Script aus dem Extras Ordner) sicher, bei der Standartinstalation bleiben Daten in der Tabelle zurück, Wird in späteren Versionen Eventuell noch abgeändert.
+		exit();
+	}else{
+		wd ('?wow-chars', 'Beim Löschen der Daten ist ein Fehler aufgetreten' 5);
+		exit();
+	}
+break;
 case 'show':
 $char = new Char(intval($menu->get(3)), NULL, WITH_STATS);
 	$out = $char->getAsArray();
@@ -53,7 +114,6 @@ $char = new Char(intval($menu->get(3)), NULL, WITH_STATS);
 	
 	var_dump($out);	
 	$tpl->set_ar_out($out,0);  
-	$design->footer();
 break;
 default:
 // Charliste erstellen
@@ -92,5 +152,5 @@ default:
 		}
 	}
 	$tpl->out(6);
-	$design->footer();  
 }
+	$design->footer();

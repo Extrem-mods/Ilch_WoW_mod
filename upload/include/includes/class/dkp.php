@@ -21,19 +21,7 @@ class DKP{
 			$this->_saldo = $this->_saldo + $row['change'];
 		}
 	}
-	/*
-	public static function getHistory($cid){
-		if(!mysql_num_rows(db_query('select `cID` FROM `prefix_chars` WHERE `cID` = '.$cid)))
-			throw Exeption('Char ist nicht in der Datenbank vorhanden');
-		$history = db_query('select `time`, `dscription`, `change` FROM `prefix_dkp_his` WHERE char='.$cid);
-		$end = array();
-		while($row = mysql_fetch_assoc($history)){
-			$end = $row;
-		}
-		return $end;
-	
-	}
-	*/
+
 	public function getHistory(){
 		return $this->_history;
 	}

@@ -10,7 +10,7 @@ if(user_has_admin_right($menu,false) == false)
 
 // Script Konfiguration
 $scripter		= 'finke';								// Name des Autors des Moduls
-$script_name	= 'Ilch WOW Mod';				// Name des Moduls
+$script_name	= 'Ilch WOW Mod';						// Name des Moduls
 $script_vers	= '1.0';								// Version des Moduls
 $ilch_vers		= '1.1';								// Version des ilchClan Scripts
 $ilch_update	= 'I';									// Update des ilchClan Scripts
