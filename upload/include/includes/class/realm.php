@@ -7,13 +7,12 @@ class Realm extends Api{
   private $_name;
   private $_slug;
 
-  public function __construct($slug, $loadData=true){
-    $this->_slug = $slug;
-    if($loadData){
+	public function __construct($slug){
+		$this->_slug = $slug;    
 		$loaded = $this->loadDatas();
 		if(!$loaded)	throw new Exception('Realm mit dem Slug ="'.$this->_slug. '" wurde nicht gefunden');
-  }
-
+	}
+	
   protected function loadDatasByDb(){
     $result =  db_query("SELECT `name` , `type` , `queue` , `status` , `population` , UNIX_TIMESTAMP(`refresh`) as `time` FROM prefix_realms WHERE `slug` = '{$this->_slug}'");
     if($result = mysql_fetch_array($result)){

@@ -1,6 +1,5 @@
 ﻿INSERT INTO `prefix_config` (`schl`, `typ`, `kat`, `frage`, `wert`, `pos`) 
 VALUES
-('wow_char_auto_rec', 'grecht', 'ilch WoW Mod', 'Ab welchem Rang sollen Chars automatich verfolgt werden?', '-5', '0'),
 ('wow_reload_time', 'input', 'ilch WoW Mod', 'Wielange [min] soll der Mod warten bevor er die Daten aus der DB als veraltet ansieht?', '1440', '0'),
 ('wow_new_char', 'grecht', 'ilch WoW Mod', 'Ab welchem Rang dürfen neuen Chars angelegt werden?', '-9', '0'),
 ('wow_del_char', 'grecht', 'ilch WoW Mod', 'Ab welchem Rang dürfen fremde Chars gelöscht werden?', '-9', '0'),

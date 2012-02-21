@@ -5,7 +5,7 @@ switch($menu->get(2)){
 case 'new':
 	global $allgAr;
 	if(!has_right($allgAr['wow_new_char'])){
-			wd ('?wow-chars', 'Sie haben nicht die benötigten Rechte, einen neuen Char anzulegen.' 5); 
+			wd ('?wow-chars', 'Sie haben nicht die benötigten Rechte, einen neuen Char anzulegen.', 5); 
 			exit();
 	}
 	$title = $allgAr['title'].' :: WOW Mod :: New Chars';
@@ -40,26 +40,28 @@ case 'new':
 break;
 case 'del':
 	if(!is_numeric($menu->get(3))){
-		wd ('?wow-chars', 'Kein char zum löchen Ausgewählt' 5); 
+		wd ('?wow-chars', 'Kein char zum löchen Ausgewählt', 5); 
 		exit();
 	}
 	try{
 		$char = New Char($menu->get(3));
-	}catch(Exception $e)(
+	}catch(Exception $e){
 		wd ('?wow-chars',$e->getMessage(),  5); 
 		exit();		
 	}
 	if(!($_SESSION['authid'] == $char->getAcc() || has_right($allgAr['wow_del_char']))){
-		wd ('?wow-chars', 'Sie haben keine Berechtigung, diesen Char zu löschen' 5); 
+		wd ('?wow-chars', 'Sie haben keine Berechtigung, diesen Char zu löschen', 5); 
+		$design->footer();
 		exit();
 	}
 	$id = $char->getCID();
 	unset($char);
-	if(db_query("DELETE FROM `prefix_chars` WHERE WHERE `cID` = '{$id}'")){
-		wd ('?wow-chars', 'Der Ausgewählte Char wurde erfolgreich aus der TAbelle entfernt' 5);  // !!Achtung!! Funktioniert nur bei InnoDB-TAbellen mit Fremdschlüsseln (Install Script aus dem Extras Ordner) sicher, bei der Standartinstalation bleiben Daten in der Tabelle zurück, Wird in späteren Versionen Eventuell noch abgeändert.
+	if(db_query("DELETE FROM `prefix_chars` WHERE `cID` = {$id}")){
+		wd ('?wow-chars', 'Der Ausgewählte Char wurde erfolgreich aus der Tabelle entfernt', 5);  // !!Achtung!! Funktioniert nur bei InnoDB-TAbellen mit Fremdschlüsseln (Install Script aus dem Extras Ordner) sicher, bei der Standartinstalation bleiben Daten in der Tabelle zurück, Wird in späteren Versionen Eventuell noch abgeändert.
+		$design->footer();
 		exit();
 	}else{
-		wd ('?wow-chars', 'Beim Löschen der Daten ist ein Fehler aufgetreten' 5);
+		wd ('?wow-chars', 'Beim Löschen der Daten ist ein Fehler aufgetreten', 5);
 		exit();
 	}
 break;
@@ -133,7 +135,7 @@ default:
 		$k = $menu->get(2);
 		$v = $classes[$menu->get(2)];
 		$tpl->set_ar_out(array('klassid' => $k, 'klassname' => $v), 3);
-		$chars = db_query('SELECT `cID`, `name`, `level`, `class`, `race`, `account` FROM `ic1_chars` WHERE `class` ='. $k);
+		$chars = db_query('SELECT `cID`, `name`, `level`, `class`, `race`, `acc_id` FROM `ic1_chars` WHERE `class` ='. $k);
 		while($row = mysql_fetch_array($chars)){
 			$row['r_name'] = getRaceByID($row['race']);
 			$tpl->set_ar_out($row, 4);
@@ -143,7 +145,7 @@ default:
 	else{
 		foreach($classes as $k=> $v){
 			$tpl->set_ar_out(array('klassid' => $k, 'klassname' => $v), 3);
-			$chars = db_query('SELECT `cID`, `name`, `level`, `class`, `race`, `account` FROM `ic1_chars` WHERE `class` ='. $k);
+			$chars = db_query('SELECT `cID`, `name`, `level`, `class`, `race`, `acc_id` FROM `ic1_chars` WHERE `class` ='. $k);
 			while($row = mysql_fetch_array($chars)){
 				$row['r_name'] = getRaceByID($row['race']);
 				$tpl->set_ar_out($row, 4);
@@ -154,3 +156,4 @@ default:
 	$tpl->out(6);
 }
 	$design->footer();
+	

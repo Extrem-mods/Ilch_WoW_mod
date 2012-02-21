@@ -36,13 +36,13 @@ class	Char	extends	Api{
 		$this->_realm	=	$realm;
 		$this->loadCharID();
 	}
-	if(!$this->loadDatas($mods)) trow new Exception('Char nicht vorhanden');
+	if(!$this->loadDatas($mods)) throw new Exception('Char nicht vorhanden');
 	}
 	
 	private function loadCharID(){
 		$result = db_query("SELECT `cID` FROM `prefix_chars` WHERE `name` LIKE '{$this->_name}' AND `realm` LIKE '{$this->_realm}'");
 		if($result = mysql_fetch_array($result))	$this->_cID = $result[0];
-		throw new Exception('Char ("'.$this->_name. '/'. $this->_realm.') nicht gefunden');
+		else throw new Exception('Char ("'.$this->_name. '/'. $this->_realm.') nicht gefunden.');
 	}
 	private function loadCharName(){
 		$result = db_query("SELECT `name`, `realm` FROM `prefix_chars` WHERE `cID`	= '{$this->_cID}'");
@@ -68,7 +68,7 @@ class	Char	extends	Api{
 		$this->_realm	=	$result['realm'];
 		$this->_acc	=	$result['acc_id'];
 		if(empty($result['level'])	||	empty($result['class'])	||	empty($result['race'])){
-		return	false;
+			return	false;
 		}else{
 		$this->_level	=	$result['level'];
 		$this->_class	=	$result['class'];
@@ -112,23 +112,14 @@ class	Char	extends	Api{
 		$this->saveDatas();
 		//noch schnell die Acc ID (in der Ilch Instalation) dem der char gehoert abfragen (Die geht Blizzard nun wirklich nichts an)
 		$acc = mysql_fetch_row(db_query("SELECT `acc_id` FROM `prefix_chars` WHERE `cID`	= '{$this->_cID}'"));
-		$this->_acc = $acc[0];
-		
+		$this->_acc = $acc[0];		
 		if($mods && $lm < $this->_lastModified){
-			$options='?fields=stats,items,appearance,talents,titles,professions,companions,progression';
-			$url='http://eu.battle.net/api/wow/character/'.$this->_realm.'/'.$this->_name.$options;
-			$curl->setURL($url);
-			$tmp	=	json_decode($curl->getResult(),	true);
-			if(isset($tmp['status']) &&	$tmp['status']	==	'nok'){
-				$this->_lastError = $tmp['reason'];
-				return false;
-			}
 			foreach($this->_mods as $mod){
 				$mod->loadDatas($tmp);
 			}
-			unset($curl);
-			return	true;
+			unset($curl);			
 		}
+		return	true;
 	}
 	//!TODO	Muss	mal	nochmal	Ueberarbeitet	werden
 	public	function loadDatas($mods = NONE){
@@ -137,10 +128,12 @@ class	Char	extends	Api{
 			$this->_mods[WITH_STATS] = new CharStats($this->_cID);
 			if($this->_mods[WITH_STATS]->loadDatas() == false) $fromApi = true;
 		}
+		/* Mods vorerst auf Eis gelegt 
 		if(WITH_ITEMS & $mods){
 			$this->_mods[WITH_ITEMS] = new CharItems($this->_cID);
 			if($this->_mods[WITH_ITEMS]->loadDatas() == false) $fromApi = true;
 		}
+		/**/
 		if(!$fromApi && $this->loadDatasByDb($mods)) return	true;
 		return	$this->loadDatasbyApi($mods);
 	}
@@ -206,14 +199,14 @@ class	Char	extends	Api{
 		return $this->_realm;
 	}
 	
-	public static newChar($realm, $name, $accid){
+	public static function newChar($realm, $name, $accid){
 		try{
-			$realm = new Realm($realm);
+			new Realm($realm);
 		}catch(Exception $e){
 			throw $e;
 			return NULL;
 		}
-		$result = db_query('INSERT INTO `prefix_chars` (`name`, `realm`, `acc_id`) (\''.$name.'\', \''.$realm.'\', '.$accid.')');
+		$result = db_query('INSERT INTO `prefix_chars` (`name`, `realm`, `acc_id`) VALUES (\''.$name.'\', \''.$realm.'\', '.$accid.')');
 		if($result){
 			return new Char($name, $realm);
 		}
