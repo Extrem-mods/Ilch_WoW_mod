@@ -16,4 +16,9 @@ in der install.sql (noch) nicht vorkommen (zB:Fremdschlüssel).
 
 II Für Benutzer
 ===============
- 
+II.1 Kann ich den Mod schon auf meiner HP verwenden um mir Chars anzuschauen udn Raid zu planen?
+------------------------------------------------------------------------------------------------
+Davon sei an dieser Stelle ganz entschieden abzuraten. Der Mod befindet sich noch immer in einem frühen entwiklungsstadium.
+An vielen Stellen existieren noch Sicherheitstechniche Mengel, oder Datenbanken und dateien werden ohne Funktion angelegt.
+Außerdem können sich auch noch häufiger dinge zB an der Datenbank ändern, und ich erstelle zZ noch keine Update Scripts, so dass
+ihr euch damit schnell die Datenbank in einen Zustand schießen könnt, in dem ihr sie per Hand bereinigen müsst. 
