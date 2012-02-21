@@ -1,7 +1,14 @@
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
+
+CREATE SCHEMA IF NOT EXISTS `default_schema` ;
+USE `default_schema` ;
+
 -- -----------------------------------------------------
--- Table `prefix_realms`
+-- Table `default_schema`.`prefix_realms`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `prefix_realms` (
+CREATE  TABLE IF NOT EXISTS `default_schema`.`prefix_realms` (
   `slug` VARCHAR(15) NOT NULL ,
   `name` VARCHAR(25) NOT NULL ,
   `type` ENUM('pvp', 'pve', 'rp', 'rppvp') NOT NULL ,
@@ -15,10 +22,12 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `prefix_chars`
+-- Table `default_schema`.`prefix_chars`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `prefix_chars` (
+CREATE  TABLE IF NOT EXISTS `default_schema`.`prefix_chars` (
   `cID` INT NOT NULL AUTO_INCREMENT ,
+  `accid` INT NULL ,
+  `raidid` INT NULL ,
   `name` VARCHAR(25) NOT NULL ,
   `level` TINYINT UNSIGNED NULL DEFAULT NULL ,
   `realm` VARCHAR(25) NOT NULL ,
@@ -34,7 +43,7 @@ CREATE  TABLE IF NOT EXISTS `prefix_chars` (
   INDEX `fk_realm` (`realm` ASC) ,
   CONSTRAINT `fk_realm`
     FOREIGN KEY (`realm` )
-    REFERENCES `prefix_realms` (`slug` )
+    REFERENCES `default_schema`.`prefix_realms` (`slug` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -42,9 +51,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `prefix_guild`
+-- Table `default_schema`.`prefix_guild`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `prefix_guild` (
+CREATE  TABLE IF NOT EXISTS `default_schema`.`prefix_guild` (
   `gID` INT NOT NULL AUTO_INCREMENT ,
   `name` VARCHAR(25) NOT NULL ,
   `realm` VARCHAR(25) NOT NULL ,
@@ -62,9 +71,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `prefix_items`
+-- Table `default_schema`.`prefix_items`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `prefix_items` (
+CREATE  TABLE IF NOT EXISTS `default_schema`.`prefix_items` (
   `iID` INT NOT NULL ,
   `name` VARCHAR(50) NOT NULL ,
   `icon` VARCHAR(255) NOT NULL ,
@@ -75,9 +84,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `prefix_items_tool`
+-- Table `default_schema`.`prefix_items_tool`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `prefix_items_tool` (
+CREATE  TABLE IF NOT EXISTS `default_schema`.`prefix_items_tool` (
   `eiID` INT NOT NULL AUTO_INCREMENT ,
   `iID` INT NOT NULL ,
   `gem0` INT NOT NULL ,
@@ -91,7 +100,7 @@ CREATE  TABLE IF NOT EXISTS `prefix_items_tool` (
   INDEX `fk_item_id` (`iID` ASC) ,
   CONSTRAINT `fk_item_id`
     FOREIGN KEY (`iID` )
-    REFERENCES `prefix_items` (`iID` )
+    REFERENCES `default_schema`.`prefix_items` (`iID` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -99,9 +108,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `prefix_char_appearance`
+-- Table `default_schema`.`prefix_char_appearance`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `prefix_char_appearance` (
+CREATE  TABLE IF NOT EXISTS `default_schema`.`prefix_char_appearance` (
   `cID` INT NOT NULL ,
   `faceVariation` TINYINT UNSIGNED NOT NULL ,
   `skinColor` TINYINT UNSIGNED NOT NULL ,
@@ -114,7 +123,7 @@ CREATE  TABLE IF NOT EXISTS `prefix_char_appearance` (
   INDEX `fk_char_id` (`cID` ASC) ,
   CONSTRAINT `fk_char_id`
     FOREIGN KEY (`cID` )
-    REFERENCES `prefix_chars` (`cID` )
+    REFERENCES `default_schema`.`prefix_chars` (`cID` )
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
@@ -122,9 +131,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `prefix_char_items`
+-- Table `default_schema`.`prefix_char_items`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `prefix_char_items` (
+CREATE  TABLE IF NOT EXISTS `default_schema`.`prefix_char_items` (
   `cID` INT NOT NULL ,
   `averageItemLevel` INT NOT NULL ,
   `averageItemLevelEquipped` INT NOT NULL ,
@@ -152,12 +161,12 @@ CREATE  TABLE IF NOT EXISTS `prefix_char_items` (
   INDEX `fk_char_id` (`cID` ASC) ,
   CONSTRAINT `fk_item_IDs`
     FOREIGN KEY (`averageItemLevel` , `averageItemLevelEquipped` , `head` , `neck` , `shoulder` , `back` , `chest` , `shirt` , `tabard` , `wrist` , `hands` , `legs` , `feet` , `waist` , `finger1` , `finger2` , `trinket1` , `trinket2` , `mainHand` , `offHand` , `ranged` )
-    REFERENCES `prefix_items_tool` (`eiID` , `eiID` , `eiID` , `eiID` , `eiID` , `eiID` , `eiID` , `eiID` , `eiID` , `eiID` , `eiID` , `eiID` , `eiID` , `eiID` , `eiID` , `eiID` , `eiID` , `eiID` , `eiID` , `eiID` , `eiID` )
+    REFERENCES `default_schema`.`prefix_items_tool` (`eiID` , `eiID` , `eiID` , `eiID` , `eiID` , `eiID` , `eiID` , `eiID` , `eiID` , `eiID` , `eiID` , `eiID` , `eiID` , `eiID` , `eiID` , `eiID` , `eiID` , `eiID` , `eiID` , `eiID` , `eiID` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_char_id`
     FOREIGN KEY (`cID` )
-    REFERENCES `prefix_chars` (`cID` )
+    REFERENCES `default_schema`.`prefix_chars` (`cID` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -165,9 +174,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `prefix_char_talents`
+-- Table `default_schema`.`prefix_char_talents`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `prefix_char_talents` (
+CREATE  TABLE IF NOT EXISTS `default_schema`.`prefix_char_talents` (
   `cID` INT NOT NULL ,
   `primName` VARCHAR(50) NOT NULL ,
   `primIcon` VARCHAR(50) NOT NULL ,
@@ -219,7 +228,7 @@ CREATE  TABLE IF NOT EXISTS `prefix_char_talents` (
   INDEX `fk_char_id` (`cID` ASC) ,
   CONSTRAINT `fk_char_id`
     FOREIGN KEY (`cID` )
-    REFERENCES `prefix_chars` (`cID` )
+    REFERENCES `default_schema`.`prefix_chars` (`cID` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -227,9 +236,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `prefix_titles`
+-- Table `default_schema`.`prefix_titles`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `prefix_titles` (
+CREATE  TABLE IF NOT EXISTS `default_schema`.`prefix_titles` (
   `tID` SMALLINT UNSIGNED NOT NULL ,
   `name` VARCHAR(100) NOT NULL ,
   PRIMARY KEY (`tID`) )
@@ -238,9 +247,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `prefix_char_titles`
+-- Table `default_schema`.`prefix_char_titles`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `prefix_char_titles` (
+CREATE  TABLE IF NOT EXISTS `default_schema`.`prefix_char_titles` (
   `cID` INT NOT NULL ,
   `tID` SMALLINT UNSIGNED NOT NULL ,
   UNIQUE INDEX (`cID` ASC, `tID` ASC) ,
@@ -248,12 +257,12 @@ CREATE  TABLE IF NOT EXISTS `prefix_char_titles` (
   INDEX `fk_titels_ID` (`tID` ASC) ,
   CONSTRAINT `fk_cID`
     FOREIGN KEY (`cID` )
-    REFERENCES `prefix_chars` (`cID` )
+    REFERENCES `default_schema`.`prefix_chars` (`cID` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_titels_ID`
     FOREIGN KEY (`tID` )
-    REFERENCES `prefix_titles` (`tID` )
+    REFERENCES `default_schema`.`prefix_titles` (`tID` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -261,9 +270,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `prefix_char_stats`
+-- Table `default_schema`.`prefix_char_stats`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `prefix_char_stats` (
+CREATE  TABLE IF NOT EXISTS `default_schema`.`prefix_char_stats` (
   `cID` INT NOT NULL ,
   `health` INT NOT NULL ,
   `powerENGINE` ENUM('mana','energie', 'rage') NOT NULL ,
@@ -317,7 +326,7 @@ CREATE  TABLE IF NOT EXISTS `prefix_char_stats` (
   INDEX `fk_chars` (`cID` ASC) ,
   CONSTRAINT `fk_chars`
     FOREIGN KEY (`cID` )
-    REFERENCES `prefix_chars` (`cID` )
+    REFERENCES `default_schema`.`prefix_chars` (`cID` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -325,9 +334,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `prefix_char_guild`
+-- Table `default_schema`.`prefix_char_guild`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `prefix_char_guild` (
+CREATE  TABLE IF NOT EXISTS `default_schema`.`prefix_char_guild` (
   `cID` INT NOT NULL ,
   `gID` INT NOT NULL ,
   UNIQUE INDEX (`cID` ASC, `gID` ASC) ,
@@ -335,12 +344,12 @@ CREATE  TABLE IF NOT EXISTS `prefix_char_guild` (
   INDEX `fk_guild_id` (`gID` ASC) ,
   CONSTRAINT `fk_c_ID`
     FOREIGN KEY (`cID` )
-    REFERENCES `prefix_chars` (`cID` )
+    REFERENCES `default_schema`.`prefix_chars` (`cID` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_guild_id`
     FOREIGN KEY (`gID` )
-    REFERENCES `prefix_guild` (`gID` )
+    REFERENCES `default_schema`.`prefix_guild` (`gID` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -348,9 +357,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `prefix_professions`
+-- Table `default_schema`.`prefix_professions`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `prefix_professions` (
+CREATE  TABLE IF NOT EXISTS `default_schema`.`prefix_professions` (
   `pID` INT NOT NULL ,
   `name` VARCHAR(50) NOT NULL ,
   `icon` VARCHAR(50) NOT NULL ,
@@ -360,9 +369,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `prefix_char_professions`
+-- Table `default_schema`.`prefix_char_professions`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `prefix_char_professions` (
+CREATE  TABLE IF NOT EXISTS `default_schema`.`prefix_char_professions` (
   `cID` INT NOT NULL ,
   `pID` INT NOT NULL ,
   `range` SMALLINT UNSIGNED NOT NULL ,
@@ -372,12 +381,12 @@ CREATE  TABLE IF NOT EXISTS `prefix_char_professions` (
   INDEX `fk_prof_ID` (`pID` ASC) ,
   CONSTRAINT `fk_chars_ID`
     FOREIGN KEY (`cID` )
-    REFERENCES `prefix_chars` (`cID` )
+    REFERENCES `default_schema`.`prefix_chars` (`cID` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_prof_ID`
     FOREIGN KEY (`pID` )
-    REFERENCES `prefix_professions` (`pID` )
+    REFERENCES `default_schema`.`prefix_professions` (`pID` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -385,9 +394,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `prefix_char_companions`
+-- Table `default_schema`.`prefix_char_companions`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `prefix_char_companions` (
+CREATE  TABLE IF NOT EXISTS `default_schema`.`prefix_char_companions` (
   `cID` INT NOT NULL ,
   `mounts` VARCHAR(255) NULL DEFAULT NULL ,
   `companions` VARCHAR(255) NULL DEFAULT NULL ,
@@ -395,7 +404,7 @@ CREATE  TABLE IF NOT EXISTS `prefix_char_companions` (
   INDEX `fk_char_id` (`cID` ASC) ,
   CONSTRAINT `fk_char_id`
     FOREIGN KEY (`cID` )
-    REFERENCES `prefix_chars` (`cID` )
+    REFERENCES `default_schema`.`prefix_chars` (`cID` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -403,9 +412,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `prefix_instanzen`
+-- Table `default_schema`.`prefix_instanzen`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `prefix_instanzen` (
+CREATE  TABLE IF NOT EXISTS `default_schema`.`prefix_instanzen` (
   `inID` MEDIUMINT NOT NULL ,
   `name` VARCHAR(30) NOT NULL ,
   PRIMARY KEY (`inID`) )
@@ -414,9 +423,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `prefix_bosse`
+-- Table `default_schema`.`prefix_bosse`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `prefix_bosse` (
+CREATE  TABLE IF NOT EXISTS `default_schema`.`prefix_bosse` (
   `bID` MEDIUMINT NOT NULL ,
   `inID` MEDIUMINT NOT NULL ,
   `name` VARCHAR(30) NOT NULL ,
@@ -427,12 +436,12 @@ CREATE  TABLE IF NOT EXISTS `prefix_bosse` (
   INDEX `fk_int_ID` (`inID` ASC) ,
   CONSTRAINT `fk_boss_id`
     FOREIGN KEY (`bID` )
-    REFERENCES `prefix_bosse` (`bID` )
+    REFERENCES `default_schema`.`prefix_bosse` (`bID` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_int_ID`
     FOREIGN KEY (`inID` )
-    REFERENCES `prefix_instanzen` (`inID` )
+    REFERENCES `default_schema`.`prefix_instanzen` (`inID` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -440,9 +449,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `prefix_char_progression`
+-- Table `default_schema`.`prefix_char_progression`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `prefix_char_progression` (
+CREATE  TABLE IF NOT EXISTS `default_schema`.`prefix_char_progression` (
   `cID` INT NOT NULL ,
   `bID` MEDIUMINT NOT NULL ,
   `normalKills` MEDIUMINT NOT NULL ,
@@ -452,12 +461,12 @@ CREATE  TABLE IF NOT EXISTS `prefix_char_progression` (
   INDEX `fk_boss_id` (`bID` ASC) ,
   CONSTRAINT `fk_char_id`
     FOREIGN KEY (`cID` )
-    REFERENCES `prefix_chars` (`cID` )
+    REFERENCES `default_schema`.`prefix_chars` (`cID` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_boss_id`
     FOREIGN KEY (`bID` )
-    REFERENCES `prefix_bosse` (`bID` )
+    REFERENCES `default_schema`.`prefix_bosse` (`bID` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -465,26 +474,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `prefix_char_acc`
+-- Table `default_schema`.`prefix_raid_gruppen`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `prefix_char_acc` (
-  `cID` INT NOT NULL ,
-  `aID` INT NOT NULL ,
-  UNIQUE INDEX (`cID` ASC, `aID` ASC) ,
-  INDEX `fk_char_id` (`cID` ASC) ,
-  CONSTRAINT `fk_char_id`
-    FOREIGN KEY (`cID` )
-    REFERENCES `prefix_chars` (`cID` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8;
-
-
--- -----------------------------------------------------
--- Table `prefix_raid_gruppen`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `prefix_raid_gruppen` (
+CREATE  TABLE IF NOT EXISTS `default_schema`.`prefix_raid_gruppen` (
   `ID` INT NOT NULL ,
   `name` VARCHAR(30) NOT NULL ,
   PRIMARY KEY (`ID`) )
@@ -493,23 +485,80 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `prefix_raid_member`
+-- Table `default_schema`.`prefix_wow_regions`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `prefix_raid_member` (
-  `rID` INT NOT NULL ,
-  `cID` INT NOT NULL ,
-  UNIQUE INDEX (`rID` ASC, `cID` ASC) ,
-  INDEX `fk_rg_id` (`rID` ASC) ,
-  INDEX `fk_char_id` (`cID` ASC) ,
-  CONSTRAINT `fk_rg_id`
-    FOREIGN KEY (`rID` )
-    REFERENCES `prefix_raid_gruppen` (`ID` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_char_id`
-    FOREIGN KEY (`cID` )
-    REFERENCES `prefix_chars` (`cID` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8;
+CREATE  TABLE IF NOT EXISTS `default_schema`.`prefix_wow_regions` (
+  `id` TINYINT UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `server` VARCHAR(25) NOT NULL ,
+  PRIMARY KEY (`id`) )
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `default_schema`.`prefix_wow_locale`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `default_schema`.`prefix_wow_locale` (
+  `id` TINYINT UNSIGNED NOT NULL AUTO_INCREMENT ,
+  `rid` TINYINT UNSIGNED NOT NULL ,
+  `short` VARCHAR(5) NOT NULL ,
+  PRIMARY KEY (`id`) )
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `default_schema`.`prefix_dkp_his`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `default_schema`.`prefix_dkp_his` (
+  `char` INT NOT NULL ,
+  `time` TIMESTAMP NOT NULL ,
+  `dscription` TEXT NOT NULL ,
+  `change` INT NOT NULL DEFAULT 0 )
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `default_schema`.`prefix_dkp_rules`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `default_schema`.`prefix_dkp_rules` (
+  `id` INT NOT NULL ,
+  `description` TEXT NOT NULL ,
+  `changes` INT NOT NULL DEFAULT 0 ,
+  PRIMARY KEY (`id`) )
+ENGINE = InnoDB;
+
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- -----------------------------------------------------
+-- Data for table `default_schema`.`prefix_wow_regions`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `default_schema`;
+INSERT INTO `default_schema`.`prefix_wow_regions` (`id`, `server`) VALUES (1, 'us.battle.net');
+INSERT INTO `default_schema`.`prefix_wow_regions` (`id`, `server`) VALUES (2, 'eu.battle.net');
+INSERT INTO `default_schema`.`prefix_wow_regions` (`id`, `server`) VALUES (3, 'kr.battle.net');
+INSERT INTO `default_schema`.`prefix_wow_regions` (`id`, `server`) VALUES (4, 'tw.battle.net');
+INSERT INTO `default_schema`.`prefix_wow_regions` (`id`, `server`) VALUES (5, 'battlenet.com.cn');
+
+COMMIT;
+
+-- -----------------------------------------------------
+-- Data for table `default_schema`.`prefix_wow_locale`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `default_schema`;
+INSERT INTO `default_schema`.`prefix_wow_locale` (`id`, `rid`, `short`) VALUES (1, 1, 'en_US');
+INSERT INTO `default_schema`.`prefix_wow_locale` (`id`, `rid`, `short`) VALUES (2, 1, 'en_MX');
+INSERT INTO `default_schema`.`prefix_wow_locale` (`id`, `rid`, `short`) VALUES (3, 2, 'en_GB');
+INSERT INTO `default_schema`.`prefix_wow_locale` (`id`, `rid`, `short`) VALUES (4, 2, 'es_ES');
+INSERT INTO `default_schema`.`prefix_wow_locale` (`id`, `rid`, `short`) VALUES (5, 2, 'fr_FR');
+INSERT INTO `default_schema`.`prefix_wow_locale` (`id`, `rid`, `short`) VALUES (6, 2, 'ru_RU');
+INSERT INTO `default_schema`.`prefix_wow_locale` (`id`, `rid`, `short`) VALUES (7, 2, 'de_DE');
+INSERT INTO `default_schema`.`prefix_wow_locale` (`id`, `rid`, `short`) VALUES (8, 3, 'ko_KR');
+INSERT INTO `default_schema`.`prefix_wow_locale` (`id`, `rid`, `short`) VALUES (9, 4, 'zh_TW');
+INSERT INTO `default_schema`.`prefix_wow_locale` (`id`, `rid`, `short`) VALUES (10, 5, 'zh_CN');
+
+COMMIT;

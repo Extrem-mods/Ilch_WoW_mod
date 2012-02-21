@@ -1,4 +1,4 @@
-I Für Entwikler
+﻿I Für Entwikler
 ===============
 I.1. Warum wird über all UTF-8 Verwednet/muss überall verwendet werden?
 -----------------------------------------------------------------------
@@ -9,11 +9,16 @@ welche ohne UTF-8 nicht vernünftig dargestellt werden könnten.
 I.2 Was ist die Datei db.mwb im extras Ordner?
 ----------------------------------------------
 Bei der db.bak handelt es sich um ein EER-Modell der Datenbank.
-Diese Dtaei kann mithile des Kostenlosen MxSQL Workbench (http://www.mysql.de/products/workbench/)
-Betrachtet und editiert werden. Beachtet bitte, das diese Datei unter Umständen neuer ist, als die install.sql,
-Da ich letztere aus dem Modell erstelle. Daher kann es auch sein, das das Modell featchers enthält, die
+Diese Dtaei kann mithile des Kostenlosen MySQL Workbench (http://www.mysql.de/products/workbench/)
+Betrachtet und editiert werden. Beachtet bitte, das diese Datei unter Umständen stark von der standartmäßigen install.sql abwichen kann.
+Da ich zZ beide paralel weiterentwikel Daher kann es auch sein, das das Modell featchers enthält, die
 in der install.sql (noch) nicht vorkommen (zB:Fremdschlüssel).
 
 II Für Benutzer
 ===============
- 
+II.1 Kann ich den Mod schon auf meiner HP verwenden um mir Chars anzuschauen udn Raid zu planen?
+------------------------------------------------------------------------------------------------
+Davon sei an dieser Stelle ganz entschieden abzuraten. Der Mod befindet sich noch immer in einem frühen entwiklungsstadium.
+An vielen Stellen existieren noch Sicherheitstechniche Mengel, oder Datenbanken und dateien werden ohne Funktion angelegt.
+Außerdem können sich auch noch häufiger dinge zB an der Datenbank ändern, und ich erstelle zZ noch keine Update Scripts, so dass
+ihr euch damit schnell die Datenbank in einen Zustand schießen könnt, in dem ihr sie per Hand bereinigen müsst. 

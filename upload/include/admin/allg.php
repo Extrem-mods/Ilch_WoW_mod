@@ -89,30 +89,27 @@ function admin_allg_wars_last_komms ( $ak ) {
 }
 function admin_allg_wow_locale ( $ak ) {
 	$wow_locale='';
-	$locales = db_fetch_assoc(db_query('select
+	$locales = db_query('select
 	`prefix_wow_locale`.`id` as `id`, `short`, `prefix_wow_regions`.`server` as `server`
 	from `prefix_wow_locale`
-	INNER JOIN `prefix_wow_regions` ON (`prefix_wow_regions`.`id` = `prefix_wow_locale`.`rid`) ORDER BY `prefix_wow_regions`.`server`, `prefix_wow_locale`.`id`'));
+	INNER JOIN `prefix_wow_regions` ON (`prefix_wow_regions`.`id` = `prefix_wow_locale`.`rid`) ORDER BY `prefix_wow_regions`.`id`, `prefix_wow_locale`.`id`');
 	$group = '';
-	$count = count($locales);
-	for($i =0; $i<$count; i++){
-		if($group != $locales[$i]['server']){
-			$group = $locales[$i]['server'];
-			if($i!=0)	$wow_locale.="</optgroup>\n";
-			$wow_locale.="<optgroup label=\"{$locales[$i]['server']}\">\n";
-			$i--;
-			continue;
+	while($row = mysql_fetch_array($locales )){
+		if($group != $row['server']){
+			if(!empty($group))	$wow_locale.="</optgroup>";
+			$wow_locale.="<optgroup label=\"{$row['server']}\">";
+			$group = $row['server'];
 		}
-		$wow_locale.="<option ".($locales[$i]['id'] == $ak?'selected="selected"':'')."value=\"{$locales[$i]['id']}\">{$locales[$i]['short']}</option>\n";
+		$wow_locale.="<option ".($row['id'] == $ak?'selected="selected" ':'')."value=\"{$row['id']}\">{$row['short']}</option>";
+		$wow_locale.="</optgroup>";
 	}
-	$wow_locale.="</optgroup>\n";
-  return ( $swow_locale );
+  return ( $wow_locale );
 }
 if ( empty ($_POST['submit']) ) {
   $gfx             = admin_allg_gfx( $allgAr['gfx'] );
   $smodul          = admin_allg_smodul ( $allgAr['smodul'] );
   $wars_last_komms = admin_allg_wars_last_komms ( $allgAr['wars_last_komms'] );
-	$wow_locale = admin_allg_wow_locale ( $allgAr['wow_locale'] );
+  $wow_locale = admin_allg_wow_locale ( $allgAr['wow_locale'] );
 
   echo '<table cellpadding="0" cellspacing="0" border="0"><tr><td><img src="include/images/icons/admin/konfiguration.png" /></td><td width="30"></td><td valign="bottom"><h1>Konfiguration</h1></td></tr></table>';
 

@@ -12,9 +12,9 @@ define('WITH_PROFESSIONS',	32);
 define('WITH_COMPANIONS',	64);
 define('WITH_PROGRESSION',	128);
 
-
 class	Char	extends	Api{
 	private	$_cID;
+	private	$_acc;
 	private	$_name;
 	private	$_level;
 	private	$_realm;
@@ -36,12 +36,13 @@ class	Char	extends	Api{
 		$this->_realm	=	$realm;
 		$this->loadCharID();
 	}
-	if($loadData)	$this->loadDatas($mods);
+	if(!$this->loadDatas($mods)) throw new Exception('Char nicht vorhanden');
 	}
 	
 	private function loadCharID(){
 		$result = db_query("SELECT `cID` FROM `prefix_chars` WHERE `name` LIKE '{$this->_name}' AND `realm` LIKE '{$this->_realm}'");
 		if($result = mysql_fetch_array($result))	$this->_cID = $result[0];
+		else throw new Exception('Char ("'.$this->_name. '/'. $this->_realm.') nicht gefunden.');
 	}
 	private function loadCharName(){
 		$result = db_query("SELECT `name`, `realm` FROM `prefix_chars` WHERE `cID`	= '{$this->_cID}'");
@@ -50,14 +51,14 @@ class	Char	extends	Api{
 			$this->_realm = $result['realm'];
 			return true;
 		}
-		return false;
+		throw new Exception('Char mit ID='.$this->_cID.' konnte in der Datenbank nicht gefundenwerden.');
 	}
 	
 	
 	//	laed	einen	Char	aus	der	DB
 	protected	function	loadDatasByDb($mods	=	NONE,	$ignorTime	=	false){
 	$sql	="SELECT 
-	`cID` , `name` , `level` , `realm` , `class`, `race`, `gender` , `achievementPoints` , `thumbnail` , UNIX_TIMESTAMP(`lastModified`) as `lastModified`, UNIX_TIMESTAMP(`updated`) as `updated`
+	`cID` , `name` , `acc_id`, `level` , `realm` , `class`, `race`, `gender` , `achievementPoints` , `thumbnail` , UNIX_TIMESTAMP(`lastModified`) as `lastModified`, UNIX_TIMESTAMP(`updated`) as `updated`
 	FROM `prefix_chars`
 	WHERE `cID`	= '{$this->_cID}'";
 	$result	=	db_query($sql);
@@ -65,8 +66,9 @@ class	Char	extends	Api{
 		$this->_cID	=	$result['cID'];
 		$this->_name	=	$result['name'];
 		$this->_realm	=	$result['realm'];
+		$this->_acc	=	$result['acc_id'];
 		if(empty($result['level'])	||	empty($result['class'])	||	empty($result['race'])){
-		return	false;
+			return	false;
 		}else{
 		$this->_level	=	$result['level'];
 		$this->_class	=	$result['class'];
@@ -94,35 +96,30 @@ class	Char	extends	Api{
 		$tmp	=	json_decode($curl->getResult(),	true);
 		if(isset($tmp['status'])	&&	$tmp['status']	==	'nok'){
 			$this->_lastError	=	$tmp['reason'];
-		return	false;
+			throw New Exception('Daten konnten nicht abgefragt werden. Grund:"'.$tmp['reason'].'"');
+			return	false;
 		}
 		$this->_name	=	$tmp['name'];
 		$this->_level	=	$tmp['level'];
 		$this->_realm	=	$tmp['realm'];
 		$this->_class	=	$tmp['class'];
 		$this->_race	=	$tmp['race'];
-		$this->_gender = $tmp['gender'];
+		$this->_gender 	=	$tmp['gender'];
 		$this->_achievementPoints	=	$tmp['achievementPoints'];
 		$this->_thumbnail =	$tmp['thumbnail'];
-		$this->_lastModified = floor($tmp['lastModified']	/	1000);	//	Blizzard logt auf die Millisekunde Genau	:)
-		$this->_updated	= time();
+		$this->_lastModified = floor($tmp['lastModified']/1000);	//	Blizzard logt auf die Millisekunde Genau	:)
+		$this->_updated	= time();		
 		$this->saveDatas();
-
+		//noch schnell die Acc ID (in der Ilch Instalation) dem der char gehoert abfragen (Die geht Blizzard nun wirklich nichts an)
+		$acc = mysql_fetch_row(db_query("SELECT `acc_id` FROM `prefix_chars` WHERE `cID`	= '{$this->_cID}'"));
+		$this->_acc = $acc[0];		
 		if($mods && $lm < $this->_lastModified){
-			$options='?fields=stats,items,appearance,talents,titles,professions,companions,progression';
-			$url='http://eu.battle.net/api/wow/character/'.$this->_realm.'/'.$this->_name.$options;
-			$curl->setURL($url);
-			$tmp	=	json_decode($curl->getResult(),	true);
-			if(isset($tmp['status']) &&	$tmp['status']	==	'nok'){
-				$this->_lastError = $tmp['reason'];
-				return false;
-			}
 			foreach($this->_mods as $mod){
 				$mod->loadDatas($tmp);
 			}
-			unset($curl);
-			return	true;
+			unset($curl);			
 		}
+		return	true;
 	}
 	//!TODO	Muss	mal	nochmal	Ueberarbeitet	werden
 	public	function loadDatas($mods = NONE){
@@ -131,10 +128,12 @@ class	Char	extends	Api{
 			$this->_mods[WITH_STATS] = new CharStats($this->_cID);
 			if($this->_mods[WITH_STATS]->loadDatas() == false) $fromApi = true;
 		}
+		/* Mods vorerst auf Eis gelegt 
 		if(WITH_ITEMS & $mods){
 			$this->_mods[WITH_ITEMS] = new CharItems($this->_cID);
 			if($this->_mods[WITH_ITEMS]->loadDatas() == false) $fromApi = true;
 		}
+		/**/
 		if(!$fromApi && $this->loadDatasByDb($mods)) return	true;
 		return	$this->loadDatasbyApi($mods);
 	}
@@ -185,5 +184,34 @@ class	Char	extends	Api{
 		return	$tmp;
 	}
 	return	$_mods;
+	}
+	
+	public function getAcc(){
+		return $this->_acc;
+	}
+	public function getCID(){
+		return $this->_cID;
+	}
+	public function getName(){
+		return $this->_name;
+	}
+	public function getRealm(){
+		return $this->_realm;
+	}
+	
+	public static function newChar($realm, $name, $accid){
+		try{
+			new Realm($realm);
+		}catch(Exception $e){
+			throw $e;
+			return NULL;
+		}
+		$result = db_query('INSERT INTO `prefix_chars` (`name`, `realm`, `acc_id`) VALUES (\''.$name.'\', \''.$realm.'\', '.$accid.')');
+		if($result){
+			return new Char($name, $realm);
+		}
+		throw new Exception('Datensatz konnte nicht angelegt werden. Char vileicht schon vorhanden?');
+		return NULL;
+		
 	}
 }

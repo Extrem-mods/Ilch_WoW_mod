@@ -1,31 +1,21 @@
-
-<table id="charList">
-<thead>
-<tr>
-<th>Name</th>
-<th>Realm</th>
-<th>Level</th>
-<th>Klasse</th>
-<th>Rasse</th>
-</tr>
-</thead>
-<tbody>
-{EXPLODE} 
-<tr>
-<td>{name}</td>
-<td>{realm}</td>
-<td>{level}</td>
-<td>{class}</td>
-<td>{race}</td>
-</tr>
-{EXPLODE} 
-</tbody>
-</table>
-<script>
-$("#charList").tableSorter({
-		sortColumn: 0,			// Integer or String of the name of the column to sort by.
-		sortClassAsc: 'sortUp',		// Class name for ascending sorting action to header
-		sortClassDesc: 'sortDown',	// Class name for descending sorting action to header
-		highlightClass: 'highlight' 		// class name for sort column highlighting.
-	});
-</script>
+<ul class="klasslist">
+{EXPLODE}
+<li><a href="?wow-chars-{k_id}"><img src="include/images/wow_mod/icons/class_{k_id}.gif" alt="{k_name}" title="{k_name}"></a></li>
+{EXPLODE}
+</ul>
+<ul class="charlist">
+{EXPLODE}
+<li>
+<ul class="{klassname}">
+{EXPLODE}
+<li>
+<ul>
+<li>{level}</li>
+<li><a href="?wow-chars-show-{cID}">{name}</a></li>
+<li><img src="include/images/wow_mod/icons/race_{race}.png" alt="{r_name}"></li>
+</ul>
+</li>
+{EXPLODE}
+</ul></li>
+{EXPLODE}
+</ul>

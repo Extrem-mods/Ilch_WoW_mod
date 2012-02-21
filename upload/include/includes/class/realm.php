@@ -7,11 +7,12 @@ class Realm extends Api{
   private $_name;
   private $_slug;
 
-  public function __construct($slug, $loadData=true){
-    $this->_slug = $slug;
-    if($loadData) $this->loadDatas();
-  }
-
+	public function __construct($slug){
+		$this->_slug = $slug;    
+		$loaded = $this->loadDatas();
+		if(!$loaded)	throw new Exception('Realm mit dem Slug ="'.$this->_slug. '" wurde nicht gefunden');
+	}
+	
   protected function loadDatasByDb(){
     $result =  db_query("SELECT `name` , `type` , `queue` , `status` , `population` , UNIX_TIMESTAMP(`refresh`) as `time` FROM prefix_realms WHERE `slug` = '{$this->_slug}'");
     if($result = mysql_fetch_array($result)){
@@ -33,7 +34,7 @@ class Realm extends Api{
     $curl = new Curl();
 	$curl->setURL($url. '?realms=' . $this->_slug.'&locale='.Api::getLocale());
 	$tmp = json_decode($curl->getResult(), true);
-    if(isset($tmp['realms'][1])){ $this->_lastError='Realm nicht gefunden'; return false;}
+    if(isset($tmp['realms'][1])){ $this->_lastError='Realm nicht gefunden'; return false;} // Wenn der Realm nicht existeirt, werden alle Realms zurueckgegeben, was in mehr als einem eintrag resultiert
     $this->_type = $tmp["realms"][0]['type'];
     $this->_queue  = $tmp["realms"][0]['queue'];
     $this->_status = $tmp["realms"][0]['status'];
